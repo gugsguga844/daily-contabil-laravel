@@ -37,5 +37,11 @@ jobs:
           cp .env.example .env
           php artisan key:generate
 
+      - name: Run Pint
+        run: ./vendor/bin/pint --test
+
+      - name: Run ESLint
+        run: npx eslint . --ext .js,.ts,.vue
+
       - name: Run Tests
         run: php artisan test
