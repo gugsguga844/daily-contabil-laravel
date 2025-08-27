@@ -35,9 +35,23 @@ const submit = () => {
 
         <!-- Left: Brand/visual panel -->
         <div class="hidden lg:flex w-1/2 xl:w-2/3 h-full relative bg-gradient-to-br from-primary to-primary-dark text-base-50 p-12">
-            <div class="z-10 mt-auto max-w-xl">
-                <h1 class="text-4xl font-bold leading-tight">Algum texto aqui.</h1>
-                <p class="mt-4 text-base-100/80">Alguma descrição aqui, talvez imagem</p>
+            <div class="z-10 my-auto max-w-xl">
+                <img
+                    src="/images/daily-contbil-high-resolution-logo-transparent.png"
+                    alt="Daily Contbil"
+                    class="h-10 md:h-12 mb-8 object-contain drop-shadow"
+                />
+
+                <h1 class="text-4xl font-bold leading-tight">Padronize e acelere sua rotina contábil</h1>
+                <p class="mt-2 text-base-100/80">Treine novos colaboradores com consistência, organize as rotinas diárias e otimize seu tempo.</p>
+
+                <div class="mt-6 flex flex-wrap gap-2">
+                    <span class="rounded-full border border-base-50/20 bg-base-50/10 px-3 py-1 text-xs uppercase tracking-wide">Confiança</span>
+                    <span class="rounded-full border border-base-50/20 bg-base-50/10 px-3 py-1 text-xs uppercase tracking-wide">Organização</span>
+                    <span class="rounded-full border border-base-50/20 bg-base-50/10 px-3 py-1 text-xs uppercase tracking-wide">Clareza</span>
+                    <span class="rounded-full border border-base-50/20 bg-base-50/10 px-3 py-1 text-xs uppercase tracking-wide">Eficiência</span>
+                    <span class="rounded-full border border-base-50/20 bg-base-50/10 px-3 py-1 text-xs uppercase tracking-wide">Tecnologia</span>
+                </div>
             </div>
             <div aria-hidden="true" class="pointer-events-none absolute inset-0">
                 <div class="absolute -top-10 -right-10 h-72 w-72 rounded-full bg-accent/20 blur-3xl"></div>
@@ -118,12 +132,6 @@ const submit = () => {
                         <Link :href="route('register')" class="font-medium text-primary hover:text-primary-light">
                             Criar conta
                         </Link>
-                    </p>
-                    <p>
-                        Ao fazer login, você concorda com nossos
-                        <span class="underline">Termos</span>
-                        e
-                        <span class="underline">Política de Privacidade</span>
                     </p>
                 </div>
             </div>
