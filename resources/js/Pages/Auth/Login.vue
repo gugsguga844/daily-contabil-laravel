@@ -60,8 +60,24 @@ const submit = () => {
         </div>
 
         <!-- Right: Auth card -->
-        <div class="w-full lg:w-1/2 xl:w-1/3 h-full bg-base-50 flex items-center justify-center p-8">
-            <div class="w-full max-w-md rounded-2xl bg-base-50 p-8 shadow-xl ring-1 ring-base-200">
+        <div class="w-full lg:w-1/2 xl:w-1/3 h-full bg-transparent lg:bg-base-50 flex flex-col items-center xl:justify-center p-0 lg:p-8">
+            <!-- Mobile: Copy + gradient header -->
+            <div class="lg:hidden w-full bg-gradient-to-br from-primary to-primary-dark text-base-50 px-6 pt-10 pb-8 relative">
+                <img
+                    src="/images/daily-contbil-high-resolution-logo-transparent.png"
+                    alt="Daily Contbil"
+                    class="h-8 mb-6 object-contain drop-shadow"
+                />
+                <h1 class="text-3xl font-bold leading-tight">Padronize e acelere sua rotina contábil</h1>
+                <p class="mt-2 text-base-100/80">Treine novos colaboradores com consistência, organize as rotinas diárias e otimize seu tempo.</p>
+
+                <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+                    <div class="absolute -top-10 -right-10 h-48 w-48 rounded-full bg-accent/20 blur-3xl"></div>
+                    <div class="absolute bottom-4 left-6 h-32 w-32 rounded-full bg-accent/10 blur-2xl"></div>
+                </div>
+            </div>
+
+            <div class="w-full max-w-md rounded-2xl bg-base-50 p-8 shadow-xl ring-1 ring-base-200 lg:mt-0">
                 <h2 class="text-2xl font-semibold text-base-800">Bem-vindo(a) de volta</h2>
                 <p class="mt-1 text-sm text-base-500">Faça login para continuar</p>
 
