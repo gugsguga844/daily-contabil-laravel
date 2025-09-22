@@ -49,3 +49,30 @@ jobs:
 
       - name: Run Tests
         run: php artisan test
+
+  deploy:
+    needs: laravel-tests
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Deploy to production
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/laravel
+            echo "Starting deployment..."
+            git pull origin main
+            echo "Code updated successfully. Installing dependencies..."
+            composer install --no-dev --optimize-autoloader
+            npm install
+            npm run build
+            echo "Dependencies installed successfully. Running migrations..."
+            php artisan migrate --force
+            php artisan optimize:clear
+            echo "Deployment completed successfully."
+            
+          
