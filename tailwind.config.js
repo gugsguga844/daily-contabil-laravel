@@ -13,7 +13,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Rubik', ...defaultTheme.fontFamily.sans],
+                sans: ['Cerebri Sans', 'sans-serif'],
             },
         },
         colors: {

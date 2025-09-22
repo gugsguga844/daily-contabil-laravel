@@ -1,5 +1,4 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
 import logo from '../../images/logo-png-transparent.png';
 </script>
 
@@ -9,7 +8,7 @@ import logo from '../../images/logo-png-transparent.png';
             <img :src="logo" alt="Logo" class="object-cover h-16 w-auto">
         </div>
         <div class="flex items-center space-x-4">
-            <input type="text" placeholder="Procurar" class="rounded-lg w-full px-4 bg-base-50 placeholder-base-100 text-base-50"></input>
+            <input type="text" placeholder="Procurar" class="rounded-lg w-full px-4 bg-base-50 placeholder-base-100 text-base-50">
         </div>
         <div class="flex items-center space-x-4">
             <div class="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
