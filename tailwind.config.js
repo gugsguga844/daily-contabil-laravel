@@ -13,24 +13,33 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Rubik', ...defaultTheme.fontFamily.sans],
+                sans: ['Cerebri Sans', 'sans-serif'],
             },
         },
         colors: {
             primary: {
-                DEFAULT: '#0D3D56', // Azul Sóbrio
+                DEFAULT: '#1E293B', // Azul Sóbrio
                 light: '#1A5A78',
                 dark: '#072433',
+            },
+            secondary: {
+                DEFAULT: '#475569',
             },
             accent: {
                 DEFAULT: '#D97706', // Âmbar
                 light: '#FBBF24',
                 dark: '#B45309',
             },
+            gray: {
+                DEFAULT: '#cbd5e1', // Texto Secundário
+            },
+            white: {
+                DEFAULT: '#FFFFFF',
+            },
             // Nossos cinzas personalizados
             base: {
-                50:  '#F8FAFC', // Fundo Principal
-                100: '#F1F5F9',
+                50:  '#334155', // Fundo Principal
+                100: '#94A3B8',
                 200: '#E2E8F0', // Bordas
                 300: '#CBD5E1',
                 400: '#94A3B8',
