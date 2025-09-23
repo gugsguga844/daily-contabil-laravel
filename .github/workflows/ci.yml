@@ -66,6 +66,7 @@ jobs:
             cd /var/www/laravel
             echo "Starting deployment..."
             git config --global --add safe.directory /var/www/laravel
+            git reset --hard origin/main
             git pull origin main
             export COMPOSER_ALLOW_SUPERUSER=1
             composer install --no-dev --optimize-autoloader
