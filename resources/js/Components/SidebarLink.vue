@@ -10,7 +10,7 @@ defineProps({
 <template>
     <Link
         :href="href"
-        :class="{ 'bg-accent text-white': active, 'text-gray hover:bg-base-50 hover:text-white': !active }" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg w-full">
+        :class="{ 'bg-brand-accent text-white': active, 'text-text-gray hover:bg-base-50 hover:text-white': !active }" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg w-full">
         <slot name="icon"></slot>
         <slot name="label"></slot>
     </Link>

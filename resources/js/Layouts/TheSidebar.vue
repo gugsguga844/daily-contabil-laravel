@@ -3,7 +3,7 @@ import SidebarLink from '../Components/SidebarLink.vue';
 </script>
 
 <template>
-    <nav class="fixed top-16 left-0 bottom-0 w-64 z-50 bg-primary overflow-y-auto border-t border-base-50 flex flex-col justify-between">
+    <nav class="fixed top-16 left-0 bottom-0 w-64 z-50 bg-surface-menus overflow-y-auto border-t border-border flex flex-col justify-between">
         <div class="p-4 space-y-2">
             <SidebarLink :href="route('dashboard')" :active="$page.url.startsWith('/dashboard')">
                 <template #icon>

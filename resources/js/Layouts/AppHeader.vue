@@ -1,11 +1,10 @@
 <script setup>
-import logo from '../../images/logo-png-transparent.png';
 </script>
 
 <template>
     <header class="bg-[#1E293B] w-full h-16 flex justify-between px-6">
-        <div class="logo h-full">
-            <img :src="logo" alt="Logo" class="object-cover h-16 w-auto">
+        <div class="logo flex items-center">
+            <img src="/images/daily-logo.png" alt="Logo" class="object-cover h-10 w-auto">
         </div>
         <div class="flex items-center space-x-4">
             <input type="text" placeholder="Procurar" class="rounded-lg w-full px-4 bg-base-50 placeholder-base-100 text-base-50">
