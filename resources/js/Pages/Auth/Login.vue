@@ -6,6 +6,8 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import IconTopics from '@/Components/IconTopics.vue';
+import { BookOpen, Users } from 'lucide-vue-next';
 
 defineProps({
     canResetPassword: {
@@ -34,23 +36,22 @@ const submit = () => {
         <Head title="Login" />
 
         <!-- Left: Brand/visual panel -->
-        <div class="hidden lg:flex w-1/2 xl:w-2/3 h-full relative bg-gradient-to-br from-primary to-primary-dark text-base-50 p-12">
-            <div class="z-10 my-auto max-w-xl">
-                <img
-                    src="/images/daily-contbil-high-resolution-logo-transparent.png"
-                    alt="Daily Contbil"
-                    class="h-10 md:h-12 mb-8 object-contain drop-shadow"
-                />
+        <div class="hidden lg:flex w-1/2 xl:w-2/3 h-full relative bg-brand text-text p-12">
+            <div class="z-10 my-auto flex flex-col gap-6">
+                <div class="mb-8">
+                    <img
+                        src="/images/daily-logo.png"
+                        alt="Daily Contbil"
+                        class="h-10 md:h-12 mb-4 object-contain drop-shadow"
+                    />
 
-                <h1 class="text-4xl font-bold leading-tight">Padronize e acelere sua rotina contábil</h1>
-                <p class="mt-2 text-base-100/80">Treine novos colaboradores com consistência, organize as rotinas diárias e otimize seu tempo.</p>
-
-                <div class="mt-6 flex flex-wrap gap-2">
-                    <span class="rounded-full border border-base-50/20 bg-base-50/10 px-3 py-1 text-xs uppercase tracking-wide">Confiança</span>
-                    <span class="rounded-full border border-base-50/20 bg-base-50/10 px-3 py-1 text-xs uppercase tracking-wide">Organização</span>
-                    <span class="rounded-full border border-base-50/20 bg-base-50/10 px-3 py-1 text-xs uppercase tracking-wide">Clareza</span>
-                    <span class="rounded-full border border-base-50/20 bg-base-50/10 px-3 py-1 text-xs uppercase tracking-wide">Eficiência</span>
-                    <span class="rounded-full border border-base-50/20 bg-base-50/10 px-3 py-1 text-xs uppercase tracking-wide">Tecnologia</span>
+                    <h1 class="text-4xl xl:text-5xl font-bold leading-tight">Transforme conhecimento em <span class="text-surface-accent">resultado</span></h1>
+                    <p class="mt-2 text-base-100/80">Treine novos colaboradores com consistência, organize as rotinas diárias e otimize seu tempo.</p>
+                </div>
+                <div class="mt-6 flex flex-wrap gap-6">
+                    <IconTopics class="w-full" :icon="BookOpen" title="Base de Conhecimento Viva" description="Crie tutoriais em vídeo, anexe documentos e padronize processos" />
+                    <IconTopics class="w-full" :icon="Users" title="Treinamento Eficiente" description="Treine novos colaboradores com consistência, organize as rotinas diárias e otimize seu tempo." />
+                    <IconTopics class="w-full" :icon="BookOpen" title="Gestão Inteligente" description="Acompanhe o progresso e mantenha tudo organizado em um só lugar" />
                 </div>
             </div>
             <div aria-hidden="true" class="pointer-events-none absolute inset-0">
@@ -60,16 +61,16 @@ const submit = () => {
         </div>
 
         <!-- Right: Auth card -->
-        <div class="w-full lg:w-1/2 xl:w-1/3 h-full bg-transparent lg:bg-base-50 flex flex-col items-center xl:justify-center p-0 lg:p-8">
+        <div class="w-full lg:w-1/2 xl:w-1/3 h-full bg-surface md:bg-brand lg:bg-surface flex flex-col lg:items-center justify-center p-0 lg:p-8">
             <!-- Mobile: Copy + gradient header -->
-            <div class="lg:hidden w-full bg-gradient-to-br from-primary to-primary-dark text-base-50 px-6 pt-10 pb-8 relative">
+            <div class="lg:hidden w-full bg-brand text-text px-6 pt-10 pb-8 relative">
                 <img
-                    src="/images/daily-contbil-high-resolution-logo-transparent.png"
+                    src="/images/daily-logo.png"
                     alt="Daily Contbil"
                     class="h-8 mb-6 object-contain drop-shadow"
                 />
-                <h1 class="text-3xl font-bold leading-tight">Padronize e acelere sua rotina contábil</h1>
-                <p class="mt-2 text-base-100/80">Treine novos colaboradores com consistência, organize as rotinas diárias e otimize seu tempo.</p>
+                <h1 class="text-3xl font-bold leading-tight">Transforme conhecimento em <span class="text-surface-accent">resultado</span></h1>
+                <p class="mt-2 text-text-gray">Treine novos colaboradores com consistência, organize as rotinas diárias e otimize seu tempo.</p>
 
                 <div aria-hidden="true" class="pointer-events-none absolute inset-0">
                     <div class="absolute -top-10 -right-10 h-48 w-48 rounded-full bg-accent/20 blur-3xl"></div>
@@ -77,9 +78,9 @@ const submit = () => {
                 </div>
             </div>
 
-            <div class="w-full max-w-md rounded-2xl bg-base-50 p-8 shadow-xl ring-1 ring-base-200 lg:mt-0">
-                <h2 class="text-2xl font-semibold text-base-800">Bem-vindo(a) de volta</h2>
-                <p class="mt-1 text-sm text-base-500">Faça login para continuar</p>
+            <div class="w-full max-w-md rounded-2xl bg-surface-card p-8 shadow-xl lg:mt-0">
+                <h2 class="text-2xl font-bold text-text-primary">Bem-vindo(a) de volta</h2>
+                <p class="mt-1 text-sm text-text-secondary">Faça login para continuar</p>
 
                 <div v-if="status" class="mt-4 rounded-md bg-accent/10 p-3 text-sm text-primary ring-1 ring-accent/20">
                     {{ status }}
@@ -126,27 +127,27 @@ const submit = () => {
                         <Link
                             v-if="canResetPassword"
                             :href="route('password.request')"
-                            class="text-sm font-medium text-primary hover:text-primary-light focus:underline"
+                            class="text-sm font-medium text-brand-accent hover:text-brand-light focus:underline"
                         >
                             Esqueceu sua senha?
                         </Link>
                     </div>
 
                     <PrimaryButton
-                        class="w-full bg-accent hover:bg-accent-light focus:bg-accent-light focus:ring-accent text-white"
+                        class="w-full bg-surface-accent hover:bg-state-warning focus:bg-state-warning focus:ring-state-warning text-white"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
                     >
-                        Entrar
+                        Entrar na plataforma
                     </PrimaryButton>
                 </form>
 
                 <!-- Footer: signup and terms -->
-                <div class="mt-6 space-y-2 text-center text-sm text-base-500">
-                    <p>
-                        Não tem uma conta?
-                        <Link :href="route('register')" class="font-medium text-primary hover:text-primary-light">
-                            Criar conta
+                <div class="mt-6 space-y-2 text-center text-sm text-text-secondary">
+                    <p class="text-text-secondary">
+                        Novo no Daily Contábil?
+                        <Link :href="route('register')" class="font-medium text-brand-accent hover:text-brand-light">
+                            Solicite uma demonstração
                         </Link>
                     </p>
                 </div>
