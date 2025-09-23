@@ -7,7 +7,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import IconTopics from '@/Components/IconTopics.vue';
-import { BookOpen, Users } from 'lucide-vue-next';
+import { BookOpen, CalendarCog, Users } from 'lucide-vue-next';
 
 defineProps({
     canResetPassword: {
@@ -50,8 +50,8 @@ const submit = () => {
                 </div>
                 <div class="mt-6 flex flex-wrap gap-6">
                     <IconTopics class="w-full" :icon="BookOpen" title="Base de Conhecimento Viva" description="Crie tutoriais em vídeo, anexe documentos e padronize processos" />
-                    <IconTopics class="w-full" :icon="Users" title="Treinamento Eficiente" description="Treine novos colaboradores com consistência, organize as rotinas diárias e otimize seu tempo." />
-                    <IconTopics class="w-full" :icon="BookOpen" title="Gestão Inteligente" description="Acompanhe o progresso e mantenha tudo organizado em um só lugar" />
+                    <IconTopics class="w-full" :icon="Users" title="Treinamento Eficiente" description="Treine novos colaboradores com consistência, organize as rotinas diárias e otimize seu tempo" />
+                    <IconTopics class="w-full" :icon="CalendarCog" title="Gestão Inteligente" description="Acompanhe o progresso e mantenha tudo organizado em um só lugar" />
                 </div>
             </div>
             <div aria-hidden="true" class="pointer-events-none absolute inset-0">
