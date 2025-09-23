@@ -65,9 +65,13 @@ jobs:
           script: |
             cd /var/www/laravel
             echo "Starting deployment..."
+            git config --global --add safe.directory /var/www/laravel
             git pull origin main
-            echo "Code updated successfully. Installing dependencies..."
+            export COMPOSER_ALLOW_SUPERUSER=1
             composer install --no-dev --optimize-autoloader
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            nvm use --lts
             npm install
             npm run build
             echo "Dependencies installed successfully. Running migrations..."
