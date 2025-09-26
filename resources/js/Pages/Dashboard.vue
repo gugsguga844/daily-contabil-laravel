@@ -12,6 +12,57 @@ import { Head } from '@inertiajs/vue3';
         </template>
 
         <div class="p-6">
+            Oiii
+        </div>
+        <div class="p-6">
+            Oiii
+        </div>
+        <div class="p-6">
+            Oi
+        </div>
+        <div class="p-6">
+            Oi
+        </div>
+        <div class="p-6">
+            Oi
+        </div>
+        <div class="p-6">
+            Oi
+        </div>
+        <div class="p-6">
+            Oi
+        </div>
+        <div class="p-6">
+            Oi
+        </div>
+        <div class="p-6">
+            Oi
+        </div>
+        <div class="p-6">
+            Oi
+        </div>
+        <div class="p-6">
+            Oi
+        </div>
+        <div class="p-6">
+            Oi
+        </div>
+        <div class="p-6">
+            Oi
+        </div>
+        <div class="p-6">
+            Oi
+        </div>
+
+        <div class="p-6">
+            Oi
+        </div><div class="p-6">
+            Oi
+        </div>
+        <div class="p-6">
+            Oi
+        </div>
+        <div class="p-6">
             Oi
         </div>
     </AuthenticatedLayout>
