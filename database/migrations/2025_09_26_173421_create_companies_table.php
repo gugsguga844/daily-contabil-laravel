@@ -25,8 +25,8 @@ return new class extends Migration
             $table->string('state');
             $table->string('zip_code');
             $table->boolean('is_active')->default(true);
-            $table->foreignId('creator_id')->constrained('users')->setNullOnDelete();
-            $table->foreignId('accountant_id')->constrained('users')->setNullOnDelete();
+            $table->foreignId('creator_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('accountant_id')->nullable()->constrained('users')->nullOnDelete();
         });
     }
 

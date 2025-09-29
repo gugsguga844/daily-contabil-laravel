@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CompanyController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,9 +23,9 @@ Route::get('/tutorials', function () {
     return Inertia::render('Tutorials/Index');
 })->middleware(['auth', 'verified'])->name('tutorials.index');
 
-Route::get('/companies', function () {
-    return Inertia::render('Companies/Index');
-})->middleware(['auth', 'verified'])->name('companies.index');
+Route::get('/companies', [CompanyController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('companies.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

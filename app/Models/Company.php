@@ -3,6 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Enums\TaxRegime;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Company extends Model
 {
@@ -11,6 +15,7 @@ class Company extends Model
         'name',
         'fantasy_name',
         'cnpj',
+        'tax_regime',
         'phone',
         'email',
         'street',
@@ -21,6 +26,21 @@ class Company extends Model
         'is_active',
         'creator_id',
         'accountant_id',
+    ];
+
+    protected $casts = [
+        'tax_regime' => TaxRegime::class,
+    ];
+
+    protected function taxRegimeLabel(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->tax_regime?->label(),
+        );
+    }
+
+    protected $appends = [
+        'tax_regime_label',
     ];
 
     public function creator(): BelongsTo

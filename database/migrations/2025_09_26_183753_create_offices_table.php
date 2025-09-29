@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('state');
             $table->string('zip_code');
             $table->boolean('is_active')->default(true);
-            $table->foreignId('office_owner_id')->constrained('users')->onDelete('restrict');
+            $table->foreignId('office_owner_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('current_plan');
         });
     }
