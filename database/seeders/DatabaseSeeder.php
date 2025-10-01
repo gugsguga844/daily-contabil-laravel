@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\Office;
 use App\Models\Company;
+use App\Models\Office;
+use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
                 $attrs['accountant_id'] = optional($users->random())->id;
             }
 
-            Company::factory()->count(5)->create($attrs);
+            Company::factory()->count(15)->create($attrs);
         });
 
         // 5) Usuário de teste padrão

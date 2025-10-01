@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CompanyController extends Controller
@@ -30,6 +29,20 @@ class CompanyController extends Controller
 
         return Inertia::render('Companies/Index', [
             'companies' => $companies,
+        ]);
+    }
+
+    public function show($company_id)
+    {
+        $user = auth()->user();
+
+        $company = $user->office
+            ->companies()
+            ->with('accountant')
+            ->findOrFail($company_id);
+
+        return Inertia::render('Companies/Show', [
+            'company' => $company,
         ]);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -26,6 +26,10 @@ Route::get('/tutorials', function () {
 Route::get('/companies', [CompanyController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('companies.index');
+
+Route::get('/companies/{company_id}', [CompanyController::class, 'show'])
+    ->middleware(['auth', 'verified'])
+    ->name('companies.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

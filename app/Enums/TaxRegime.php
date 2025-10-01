@@ -7,7 +7,7 @@ enum TaxRegime: string
     case SIMPLES_NACIONAL = 'simples_nacional';
     case LUCRO_PRESUMIDO = 'lucro_presumido';
     case LUCRO_REAL = 'lucro_real';
-    
+
     public function label(): string
     {
         return match ($this) {

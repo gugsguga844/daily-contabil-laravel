@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, nextTick } from 'vue';
 
 const props = defineProps({
     align: {
@@ -31,22 +31,48 @@ const widthClass = computed(() => {
     }[props.width.toString()];
 });
 
+const open = ref(false);
+const dropdownRef = ref(null);
+const openUpward = ref(false);
+
 const alignmentClasses = computed(() => {
+    let classes = '';
     if (props.align === 'left') {
-        return 'ltr:origin-top-left rtl:origin-top-right start-0';
+        classes = 'ltr:origin-top-left rtl:origin-top-right start-0';
     } else if (props.align === 'right') {
-        return 'ltr:origin-top-right rtl:origin-top-left end-0';
+        classes = 'ltr:origin-top-right rtl:origin-top-left end-0';
     } else {
-        return 'origin-top';
+        classes = 'origin-top';
     }
+    
+    return classes;
 });
 
-const open = ref(false);
+const positionClasses = computed(() => {
+    return openUpward.value ? 'bottom-full mb-2' : 'top-full mt-2';
+});
+
+const toggleDropdown = () => {
+    open.value = !open.value;
+    
+    if (open.value) {
+        nextTick(() => {
+            if (dropdownRef.value) {
+                const rect = dropdownRef.value.getBoundingClientRect();
+                const spaceBelow = window.innerHeight - rect.bottom;
+                const spaceAbove = rect.top;
+                
+                // Open upward if there's not enough space below but there is space above
+                openUpward.value = spaceBelow < 200 && spaceAbove > spaceBelow;
+            }
+        });
+    }
+};
 </script>
 
 <template>
-    <div class="relative">
-        <div @click="open = !open">
+    <div class="relative" ref="dropdownRef">
+        <div @click.stop="toggleDropdown">
             <slot name="trigger" />
         </div>
 
@@ -67,9 +93,8 @@ const open = ref(false);
         >
             <div
                 v-show="open"
-                class="absolute z-50 mt-2 rounded-md shadow-lg"
-                :class="[widthClass, alignmentClasses]"
-                style="display: none"
+                class="absolute z-50 rounded-md shadow-lg"
+                :class="[widthClass, alignmentClasses, positionClasses]"
                 @click="open = false"
             >
                 <div

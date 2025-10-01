@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Office;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Company>
@@ -19,7 +19,7 @@ class CompanyFactory extends Factory
     {
         return [
             'name' => fake()->company(),
-            'fantasy_name' => fake()->companySuffix() . ' ' . fake()->company(),
+            'fantasy_name' => fake()->companySuffix().' '.fake()->company(),
             'cnpj' => fake()->unique()->numerify('##############'),
             'phone' => fake()->phoneNumber(),
             'email' => fake()->unique()->safeEmail(),
