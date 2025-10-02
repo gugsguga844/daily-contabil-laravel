@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            // Make it nullable to avoid violating the FK for existing rows
-            $table->foreignId('office_id')
-                ->nullable()
-                ->after('id')
-                ->constrained('offices')
-                ->nullOnDelete();
-        });
+        if (!Schema::hasColumn('users', 'office_id')) {
+            Schema::table('users', function (Blueprint $table) {
+                // Make it nullable to avoid violating the FK for existing rows
+                $table->foreignId('office_id')
+                    ->nullable()
+                    ->after('id')
+                    ->constrained('offices')
+                    ->nullOnDelete();
+            });
+        }
     }
 
     /**
@@ -26,9 +28,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            // Drops the foreign key and the column
-            $table->dropConstrainedForeignId('office_id');
-        });
+        if (Schema::hasColumn('users', 'office_id')) {
+            Schema::table('users', function (Blueprint $table) {
+                // Drops the foreign key and the column
+                $table->dropConstrainedForeignId('office_id');
+            });
+        }
     }
 };
