@@ -12,7 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('office_id')->after('id')->constrained('offices')->onDelete('cascade');
+            // Make it nullable to avoid violating the FK for existing rows
+            $table->foreignId('office_id')
+                ->nullable()
+                ->after('id')
+                ->constrained('offices')
+                ->nullOnDelete();
         });
     }
 
@@ -22,9 +27,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['office_id']);
-            $table->dropIndex(['office_id']);
-            $table->dropColumn('office_id');
+            // Drops the foreign key and the column
+            $table->dropConstrainedForeignId('office_id');
         });
     }
 };
