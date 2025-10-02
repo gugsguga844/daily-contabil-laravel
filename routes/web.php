@@ -37,4 +37,21 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Admin UI routes (system users only)
+Route::prefix('admin')
+    ->middleware(['auth', 'verified', 'admin.role'])
+    ->name('admin.')
+    ->group(function () {
+        // Temporary simple dashboard route
+        Route::get('/dashboard', function () {
+            return Inertia::render('Admin/Dashboard');
+        })->name('dashboard');
+
+        // Offices onboarding
+        Route::get('/offices/create', [\App\Http\Controllers\Admin\OfficeController::class, 'create'])
+            ->name('offices.create');
+        Route::post('/offices', [\App\Http\Controllers\Admin\OfficeController::class, 'store'])
+            ->name('offices.store');
+    });
+
 require __DIR__.'/auth.php';
