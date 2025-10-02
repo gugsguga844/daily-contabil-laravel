@@ -26,6 +26,7 @@ export default {
                 surface: {
                     // Planos de fundo por contexto
                     DEFAULT: '#F8FAFC', // base.50 - Fundo Principal
+                    white: '#FFFFFF',
                     muted: '#E2E8F0',   // base.200 - Zonas sutis (content bg)
                     card: '#FFFFFF',    // cards e elementos elevados
                     menus: '#1E293B',   // navegação lateral/topbar escura

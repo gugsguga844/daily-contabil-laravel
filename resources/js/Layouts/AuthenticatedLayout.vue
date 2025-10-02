@@ -8,7 +8,7 @@ import TheSidebar from './TheSidebar.vue';
     <AppHeader />
     <div class="flex">
         <TheSidebar />
-        <main class="flex-1 ml-64">
+        <main class="flex-1 ml-64 p-6">
             <slot />
         </main>
     </div>

@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <header class="bg-[#1E293B] w-full h-16 flex justify-between px-6">
+    <header class="bg-[#1E293B] w-full h-16 flex justify-between px-6 sticky top-0 z-50">
         <div class="logo flex items-center">
             <img src="/images/daily-logo.png" alt="Logo" class="object-cover h-10 w-auto">
         </div>
