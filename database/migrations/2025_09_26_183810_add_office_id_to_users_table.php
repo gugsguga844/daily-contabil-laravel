@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasColumn('users', 'office_id')) {
+        if (! Schema::hasColumn('users', 'office_id')) {
             Schema::table('users', function (Blueprint $table) {
                 // Make it nullable to avoid violating the FK for existing rows
                 $table->foreignId('office_id')
