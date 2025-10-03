@@ -27,7 +27,16 @@ Route::get('/companies', [CompanyController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('companies.index');
 
+Route::get('/companies/create', [CompanyController::class, 'create'])
+    ->middleware(['auth', 'verified'])
+    ->name('companies.create');
+
+Route::post('/companies', [CompanyController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('companies.store');
+
 Route::get('/companies/{company_id}', [CompanyController::class, 'show'])
+    ->whereNumber('company_id')
     ->middleware(['auth', 'verified'])
     ->name('companies.show');
 

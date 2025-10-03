@@ -21,6 +21,10 @@ defineProps({
 function onView(id) {
     router.visit(route('companies.show', id));
 }
+
+function onCreate() {
+    router.get(route('companies.create'));
+}
 </script>
 
 <template>
@@ -29,12 +33,12 @@ function onView(id) {
     <AuthenticatedLayout>
         <div class="flex gap-4 mb-8 justify-between">
             <HeaderTitle title="Empresas" subtitle="Gerencie suas empresas clientes" />
-            <div class="flex gap-4">
+            <div class="flex gap-4 py-2">
                 <SecondaryButton :icon="Upload">
-                    Importar lista CSV
+                    <span class="mt-1">Importar lista CSV</span>
                 </SecondaryButton>
-                <PrimaryButton :icon="Plus">
-                    Nova Empresa
+                <PrimaryButton :icon="Plus" @click="onCreate">
+                    <span class="mt-1">Nova Empresa</span>
                 </PrimaryButton>
             </div>
         </div>
