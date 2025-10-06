@@ -32,6 +32,11 @@ class Office extends Model
         return $this->hasMany(Company::class);
     }
 
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
+
     public function office_owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'office_owner_id');

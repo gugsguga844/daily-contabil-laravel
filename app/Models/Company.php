@@ -26,6 +26,7 @@ class Company extends Model
         'zip_code',
         'is_active',
         'creator_id',
+        'office_id',
         'accountant_id',
     ];
 

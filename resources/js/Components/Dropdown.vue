@@ -33,7 +33,9 @@ const widthClass = computed(() => {
 
 const open = ref(false);
 const dropdownRef = ref(null);
+const menuRef = ref(null);
 const openUpward = ref(false);
+const menuStyle = ref({ top: '0px', left: '0px' });
 
 const alignmentClasses = computed(() => {
     let classes = '';
@@ -48,22 +50,34 @@ const alignmentClasses = computed(() => {
     return classes;
 });
 
-const positionClasses = computed(() => {
-    return openUpward.value ? 'bottom-full mb-2' : 'top-full mt-2';
-});
+const positionClasses = computed(() => '');
 
 const toggleDropdown = () => {
     open.value = !open.value;
     
     if (open.value) {
         nextTick(() => {
-            if (dropdownRef.value) {
-                const rect = dropdownRef.value.getBoundingClientRect();
-                const spaceBelow = window.innerHeight - rect.bottom;
-                const spaceAbove = rect.top;
-                
-                // Open upward if there's not enough space below but there is space above
-                openUpward.value = spaceBelow < 200 && spaceAbove > spaceBelow;
+            if (dropdownRef.value && menuRef.value) {
+                const triggerRect = dropdownRef.value.getBoundingClientRect();
+                const spaceBelow = window.innerHeight - triggerRect.bottom;
+                const spaceAbove = triggerRect.top;
+                const menuHeight = menuRef.value.offsetHeight || 0;
+                const menuWidth = menuRef.value.offsetWidth || 0;
+                const margin = 8;
+
+                openUpward.value = menuHeight > spaceBelow && spaceAbove > spaceBelow;
+
+                let x = props.align === 'right'
+                    ? triggerRect.right - menuWidth
+                    : triggerRect.left;
+                let y = openUpward.value
+                    ? triggerRect.top - menuHeight - margin
+                    : triggerRect.bottom + margin;
+
+                x = Math.min(Math.max(8, x), window.innerWidth - menuWidth - 8);
+                y = Math.min(Math.max(8, y), window.innerHeight - menuHeight - 8);
+
+                menuStyle.value = { top: `${y}px`, left: `${x}px` };
             }
         });
     }
@@ -76,7 +90,6 @@ const toggleDropdown = () => {
             <slot name="trigger" />
         </div>
 
-        <!-- Full Screen Dropdown Overlay -->
         <div
             v-show="open"
             class="fixed inset-0 z-40"
@@ -93,9 +106,11 @@ const toggleDropdown = () => {
         >
             <div
                 v-show="open"
-                class="absolute z-50 rounded-md shadow-lg"
+                class="fixed z-50 rounded-md shadow-lg"
                 :class="[widthClass, alignmentClasses, positionClasses]"
+                :style="menuStyle"
                 @click="open = false"
+                ref="menuRef"
             >
                 <div
                     class="rounded-md ring-1 ring-black ring-opacity-5"
