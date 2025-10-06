@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use Illuminate\Http\RedirectResponse;
-use Inertia\Response;
-use App\Models\Company;
 use App\Enums\TaxRegime;
-use Illuminate\Http\Request;
+use App\Models\Company;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class CompanyController extends Controller
 {
@@ -74,7 +74,7 @@ class CompanyController extends Controller
             'name' => 'required|string|max:255',
             'fantasy_name' => 'required|string|max:255',
             'cnpj' => 'required|string|max:255',
-            'tax_regime' => 'required|in:' . TaxRegime::values(),
+            'tax_regime' => 'required|in:'.TaxRegime::values(),
             'phone' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'street' => 'required|string|max:255',
