@@ -8,6 +8,7 @@ use Inertia\Response;
 use App\Models\Company;
 use App\Enums\TaxRegime;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class CompanyController extends Controller
 {
@@ -53,7 +54,18 @@ class CompanyController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render('Companies/Create');
+        $office = auth()->user()->office;
+
+        $accountants = $office->users()->get()->map(function (User $user) {
+            return [
+                'value' => $user->id,
+                'label' => $user->name,
+            ];
+        });
+
+        return Inertia::render('Companies/Create', [
+            'accountants' => $accountants,
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
@@ -70,8 +82,6 @@ class CompanyController extends Controller
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'zip_code' => 'required|string|max:255',
-            'is_active' => 'required|boolean',
-            'creator_id' => 'required|exists:users,id',
             'accountant_id' => 'required|exists:users,id',
         ]);
 
@@ -87,8 +97,9 @@ class CompanyController extends Controller
             'city' => $request->city,
             'state' => $request->state,
             'zip_code' => $request->zip_code,
-            'is_active' => $request->is_active,
-            'creator_id' => $request->creator_id,
+            'is_active' => true,
+            'creator_id' => auth()->id(),
+            'office_id' => optional(auth()->user())->office_id,
             'accountant_id' => $request->accountant_id,
         ]);
 

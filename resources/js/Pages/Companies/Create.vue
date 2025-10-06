@@ -1,7 +1,7 @@
 <script setup>
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { ArrowLeft, Building2 } from 'lucide-vue-next';
+import { ArrowLeft, Building2, Cog, MapPin, Save, X } from 'lucide-vue-next';
 import HeaderTitle from '@/Components/HeaderTitle.vue';
 import IconButton from '@/Components/IconButton.vue';
 import SmallHeaderTitle from '@/Components/SmallHeaderTitle.vue';
@@ -9,13 +9,25 @@ import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import FormSelect from '@/Components/FormSelect.vue';
+import IconTextButton from '@/Components/IconTextButton.vue';
+
+const props = defineProps({
+    accountants: Array,
+});
 
 const form = useForm({
     name: '',
-    email: '',
+    fantasy_name: '',
     cnpj: '',
     tax_regime: '',
     phone: '',
+    email: '',
+    zip_code: '',
+    street: '',
+    number: '',
+    city: '',
+    state: '',
+    accountant_id: props.accountants.length > 0 ? props.accountants[0].value : null,
 })
 
 function formatCnpj(cnpj) {
@@ -66,12 +78,12 @@ function onSubmit() {
                         />
                     </div>
                     <div class="form-group">
-                        <InputLabel for="name">Nome Fantasia</InputLabel>
+                        <InputLabel for="fantasy_name">Nome Fantasia</InputLabel>
                         <TextInput
-                            id="name"
+                            id="fantasy_name"
                             type="text"
                             class="mt-1 block w-full"
-                            v-model="form.name"
+                            v-model="form.fantasy_name"
                             required
                             autofocus
                             autocomplete="username"
@@ -139,32 +151,31 @@ function onSubmit() {
 
             <div class="p-6 bg-white rounded-lg shadow-md">
                 <div class="flex gap-4">
-                    <IconButton class="my-2" :icon="Building2" />
+                    <IconButton class="my-2" :icon="MapPin" />
                     <SmallHeaderTitle title="Endereço" subtitle="Preencha os dados do endereço" />
                 </div>
                 <div class="mt-6 grid grid-cols-2 gap-4">
                     <div class="form-group">
-                        <InputLabel for="cep">CEP</InputLabel>
+                        <InputLabel for="zip_code">CEP</InputLabel>
                         <TextInput
-                            id="cep"
+                            id="zip_code"
                             type="text"
                             class="mt-1 block w-full"
-                            v-model="form.cep"
+                            v-model="form.zip_code"
                             required
                             autofocus
                             autocomplete="username"
                             maxlength="8"
                             placeholder="00000-000"
-                            @input="form.cep = formatCep($event.target.value)"
                         />
                     </div>
                     <div class="form-group">
-                        <InputLabel for="logradouro">Logradouro</InputLabel>
+                        <InputLabel for="street">Logradouro</InputLabel>
                         <TextInput
-                            id="logradouro"
+                            id="street"
                             type="text"
                             class="mt-1 block w-full"
-                            v-model="form.logradouro"
+                            v-model="form.street"
                             required
                             autofocus
                             autocomplete="username"
@@ -173,12 +184,12 @@ function onSubmit() {
                         />
                     </div>
                     <div class="form-group">
-                        <InputLabel for="numero">Número</InputLabel>
+                        <InputLabel for="number">Número</InputLabel>
                         <TextInput
-                            id="numero"
+                            id="number"
                             type="text"
                             class="mt-1 block w-full"
-                            v-model="form.numero"
+                            v-model="form.number"
                             required
                             autofocus
                             autocomplete="username"
@@ -187,12 +198,12 @@ function onSubmit() {
                         />
                     </div>
                     <div class="form-group">
-                        <InputLabel for="cidade">Cidade</InputLabel>
+                        <InputLabel for="city">Cidade</InputLabel>
                         <TextInput
-                            id="cidade"
+                            id="city"
                             type="text"
                             class="mt-1 block w-full"
-                            v-model="form.cidade"
+                            v-model="form.city"
                             required
                             autofocus
                             autocomplete="username"
@@ -201,12 +212,12 @@ function onSubmit() {
                         />
                     </div>
                     <div class="form-group">
-                        <InputLabel for="estado">Estado</InputLabel>
+                        <InputLabel for="state">Estado</InputLabel>
                         <TextInput
-                            id="estado"
+                            id="state"
                             type="text"
                             class="mt-1 block w-full"
-                            v-model="form.estado"
+                            v-model="form.state"
                             required
                             autofocus
                             autocomplete="username"
@@ -214,6 +225,36 @@ function onSubmit() {
                             placeholder="Estado"
                         />
                     </div>
+                </div>
+            </div>
+            <div class="p-6 bg-white rounded-lg shadow-md">
+                <div class="flex gap-4">
+                    <IconButton class="my-2" :icon="Cog" />
+                    <SmallHeaderTitle title="Gestão" subtitle="Definições adicionais" />
+                </div>
+                <div class="mt-6 grid grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <InputLabel for="accountant">Contador Responsável</InputLabel>
+                        <FormSelect
+                            id="accountant"
+                            v-model="form.accountant_id"
+                            :options="accountants"
+                            required
+                            autofocus
+                            autocomplete="username"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-white rounded-lg shadow-md">
+                <div class="flex justify-between gap-4">
+                    <IconTextButton class="my-2 border-red-500" iconClass="text-red-500" :icon="X">
+                        <span class="mt-1 text-red-500">Cancelar</span>
+                    </IconTextButton>
+                    <IconTextButton type="submit" class="my-2 bg-brand-accent" iconClass="text-white" :icon="Save">
+                        <span class="mt-1 text-white">Salvar</span>
+                    </IconTextButton>
                 </div>
             </div>
         </form>

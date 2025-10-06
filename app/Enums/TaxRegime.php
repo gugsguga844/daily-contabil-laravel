@@ -16,4 +16,12 @@ enum TaxRegime: string
             self::LUCRO_REAL => 'Lucro Real',
         };
     }
+
+    /**
+     * Returns a comma-separated list of enum values for use in validation rules (e.g., 'in:'.TaxRegime::values()).
+     */
+    public static function values(): string
+    {
+        return implode(',', array_map(fn (self $c) => $c->value, self::cases()));
+    }
 }
