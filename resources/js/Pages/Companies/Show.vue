@@ -3,12 +3,16 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import HeaderTitle from '@/Components/HeaderTitle.vue';
 import { Head } from '@inertiajs/vue3';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
-import { ArrowLeft, Building2, Cog, MapPin, Phone } from 'lucide-vue-next';
-import IconTextButton from '@/Components/IconTextButton.vue';
+import { ArrowLeft, BookOpen, Building2, MapPin, Phone, Plus } from 'lucide-vue-next';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const props = defineProps({
     company: Object,
 });
+
+function onBack() {
+    window.history.back();
+}
 </script>
 
 <template>
@@ -16,7 +20,7 @@ const props = defineProps({
     <AuthenticatedLayout>
         <div class="flex gap-4">
             <div class="py-2">
-                <SecondaryButton :icon="ArrowLeft">
+                <SecondaryButton @click="onBack" :icon="ArrowLeft">
                     <span class="mt-1">Voltar</span>
                 </SecondaryButton>
             </div>
@@ -78,6 +82,18 @@ const props = defineProps({
                     <p>{{ company.city }}</p>
                     <p>{{ company.zip_code }}</p>
                 </div>
+            </div>
+        </div>
+
+        <div class="p-6 bg-white shadow-md rounded-lg mt-6">
+            <div class="flex justify-between mb-4">
+                <div class="flex items-center gap-4">
+                    <BookOpen class="w-6 h-6" />
+                    <h2 class="font-semibold">Conteúdo</h2>
+                </div>
+                <PrimaryButton :icon="Plus" @click="onCreate">
+                    <span class="mt-1">Adicionar</span>
+                </PrimaryButton>   
             </div>
         </div>
     </AuthenticatedLayout>
