@@ -6,7 +6,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { ArrowLeft, BookOpen, Building2, MapPin, Phone, Plus } from 'lucide-vue-next';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
-const props = defineProps({
+defineProps({
     company: Object,
 });
 
