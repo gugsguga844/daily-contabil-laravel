@@ -48,7 +48,23 @@ class CompanyController extends Controller
             ->findOrFail($company_id);
 
         return Inertia::render('Companies/Show', [
-            'company' => $company,
+            'company' => [
+                'id' => $company->id,
+                'name' => $company->name,
+                'fantasy_name' => $company->fantasy_name,
+                'cnpj' => $company->cnpj,
+                'tax_regime' => $company->tax_regime?->value,
+                'tax_regime_label' => $company->tax_regime?->label(),
+                'is_active' => $company->is_active,
+                'accountant_name' => optional($company->accountant)->name,
+                'phone' => $company->phone,
+                'email' => $company->email,
+                'street' => $company->street,
+                'number' => $company->number,
+                'city' => $company->city,
+                'state' => $company->state,
+                'zip_code' => $company->zip_code,
+            ],
         ]);
     }
 
