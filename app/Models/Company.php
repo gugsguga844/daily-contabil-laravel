@@ -54,4 +54,9 @@ class Company extends Model
     {
         return $this->belongsTo(User::class, 'accountant_id');
     }
+
+    public function contents()
+    {
+        return $this->morphToMany(Content::class, 'contentable');
+    }
 }

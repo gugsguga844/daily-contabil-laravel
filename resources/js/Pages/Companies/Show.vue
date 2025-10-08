@@ -5,6 +5,8 @@ import { Head } from '@inertiajs/vue3';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { ArrowLeft, BookOpen, Building2, MapPin, Phone, Plus } from 'lucide-vue-next';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import ContentManagerModal from '@/Components/ContentManagerModal.vue';
+import { ref } from 'vue';
 
 defineProps({
     company: Object,
@@ -13,6 +15,8 @@ defineProps({
 function onBack() {
     window.history.back();
 }
+
+const isModalVisible = ref(false);
 </script>
 
 <template>
@@ -91,11 +95,12 @@ function onBack() {
                     <BookOpen class="w-6 h-6" />
                     <h2 class="font-semibold">Conteúdo</h2>
                 </div>
-                <PrimaryButton :icon="Plus" @click="onCreate">
+                <PrimaryButton :icon="Plus" @click="isModalVisible = true">
                     <span class="mt-1">Adicionar</span>
                 </PrimaryButton>   
             </div>
         </div>
     </AuthenticatedLayout>
+    <ContentManagerModal modalTitle="Gerenciar Conteúdo" modalDescription="Gerencie o conteúdo da empresa" :show="isModalVisible" @close="isModalVisible = false"/>
 </template>
     
