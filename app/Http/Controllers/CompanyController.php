@@ -41,30 +41,22 @@ class CompanyController extends Controller
     public function show($company_id)
     {
         $user = auth()->user();
+        $office = $user->office;
 
-        $company = $user->office
+        $company = $office
             ->companies()
-            ->with('accountant')
+            ->with('accountant', 'contents')
             ->findOrFail($company_id);
 
+        $libraryContents = $office
+            ->contents()
+            ->with('uploader')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return Inertia::render('Companies/Show', [
-            'company' => [
-                'id' => $company->id,
-                'name' => $company->name,
-                'fantasy_name' => $company->fantasy_name,
-                'cnpj' => $company->cnpj,
-                'tax_regime' => $company->tax_regime?->value,
-                'tax_regime_label' => $company->tax_regime?->label(),
-                'is_active' => $company->is_active,
-                'accountant_name' => optional($company->accountant)->name,
-                'phone' => $company->phone,
-                'email' => $company->email,
-                'street' => $company->street,
-                'number' => $company->number,
-                'city' => $company->city,
-                'state' => $company->state,
-                'zip_code' => $company->zip_code,
-            ],
+            'company' => $company,
+            'libraryContents' => $libraryContents,
         ]);
     }
 

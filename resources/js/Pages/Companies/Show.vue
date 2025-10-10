@@ -6,10 +6,16 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { ArrowLeft, BookOpen, Building2, MapPin, Phone, Plus } from 'lucide-vue-next';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import ContentManagerModal from '@/Components/ContentManagerModal.vue';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
-defineProps({
+const props = defineProps({
     company: Object,
+    libraryContents: Array,
+});
+
+const attachedContentIds = computed(() => {
+    if (!props.company?.contents) return [];
+    return props.company.contents.map(content => content.id);
 });
 
 function onBack() {
@@ -99,8 +105,31 @@ const isModalVisible = ref(false);
                     <span class="mt-1">Adicionar</span>
                 </PrimaryButton>   
             </div>
+
+            <div class="flex flex-col gap-4">
+                <div class="p-6 flex flex-col gap-4 bg-white shadow-md rounded-lg">
+                    <div class="flex items-center gap-4 mb-4">
+                        <BookOpen class="w-6 h-6" />
+                        <h2 class="font-semibold">Conteúdo</h2>
+                    </div>
+                    <div class="info-group">
+                        <h3 class="text-text-secondary font-semibold">Conteúdo</h3>
+                        <p>{{ company.contents.length }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </AuthenticatedLayout>
-    <ContentManagerModal modalTitle="Gerenciar Conteúdo" modalDescription="Gerencie o conteúdo da empresa" :show="isModalVisible" @close="isModalVisible = false"/>
+    <ContentManagerModal 
+        modalTitle="Gerenciar Conteúdo" 
+        modalDescription="Gerencie o conteúdo da empresa" 
+        :attachment-url="route('companies.contents.store', { company: company.id })" 
+        :show="isModalVisible" 
+        @close="isModalVisible = false" 
+        :contents="libraryContents" 
+        :contentable-id="company.id" 
+        :contentable-type="'App\\Models\\Company'"
+        :initial-selected-ids="attachedContentIds"
+    />
 </template>
     

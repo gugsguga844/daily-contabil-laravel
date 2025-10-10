@@ -1,10 +1,12 @@
 <?php
 
-use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\ContentController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CompanyContentController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -39,6 +41,11 @@ Route::get('/companies/{company_id}', [CompanyController::class, 'show'])
     ->whereNumber('company_id')
     ->middleware(['auth', 'verified'])
     ->name('companies.show');
+
+Route::post('/contents', [ContentController::class, 'store'])->name('contents.store');
+Route::delete('/contents/{content}', [ContentController::class, 'destroy'])->name('contents.destroy');
+
+Route::post('/companies/{company}/contents', [CompanyContentController::class, 'store'])->name('companies.contents.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

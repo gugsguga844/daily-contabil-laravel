@@ -41,4 +41,9 @@ class Office extends Model
     {
         return $this->belongsTo(User::class, 'office_owner_id');
     }
+
+    public function contents(): HasMany
+    {
+        return $this->hasMany(Content::class);
+    }
 }
