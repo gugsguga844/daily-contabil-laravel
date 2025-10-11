@@ -80,9 +80,9 @@ function onCreate() {
                     <td class="p-4 align-middle whitespace-nowrap text-sm">{{ company.name }}</td>
                     <td class="p-4 align-middle whitespace-nowrap text-sm">{{ company.cnpj }}</td>
                     <td class="p-4 align-middle whitespace-nowrap text-sm">
-                        <span v-if="company.tax_regime === 'simples_nacional'" :class="company.tax_regime === 'simples_nacional' ? 'bg-[#F3E8FF] text-[#6e11b0] font-semibold px-2 py-1 rounded' : 'text-red-500'">{{ company.tax_regime_label }}</span>
-                        <span v-else-if="company.tax_regime === 'lucro_presumido'" :class="company.tax_regime === 'lucro_presumido' ? 'bg-[#F3E8FF] text-[#6e11b0] font-semibold px-2 py-1 rounded' : 'text-red-500'">{{ company.tax_regime_label }}</span>
-                        <span v-else-if="company.tax_regime === 'lucro_real'" :class="company.tax_regime === 'lucro_real' ? 'bg-[#F3E8FF] text-[#6e11b0] font-semibold px-2 py-1 rounded' : 'text-red-500'">{{ company.tax_regime_label }}</span>
+                        <span v-if="company.tax_regime === 'simples_nacional'" :class="company.tax_regime === 'simples_nacional' ? 'bg-[#E8F5E9] text-[#166534] font-semibold px-2 py-1 rounded' : 'text-red-500'">{{ company.tax_regime_label }}</span>
+                        <span v-else-if="company.tax_regime === 'lucro_presumido'" :class="company.tax_regime === 'lucro_presumido' ? 'bg-[#FFF4E5] text-[#B45309] font-semibold px-2 py-1 rounded' : 'text-red-500'">{{ company.tax_regime_label }}</span>
+                        <span v-else-if="company.tax_regime === 'lucro_real'" :class="company.tax_regime === 'lucro_real' ? 'bg-[#E6F0FF] text-[#1D4ED8] font-semibold px-2 py-1 rounded' : 'text-red-500'">{{ company.tax_regime_label }}</span>
                     </td>
                     <td class="p-4 align-middle whitespace-nowrap text-sm">
                         <span :class="company.is_active ? 'bg-[#DBFCE7] text-[#10B981] font-semibold px-2 py-1 rounded' : 'bg-[#FFE2E2] text-[#EF4444] font-semibold px-2 py-1 rounded'">{{ company.is_active ? 'Ativa' : 'Inativa' }}</span>

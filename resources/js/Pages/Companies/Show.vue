@@ -3,16 +3,30 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import HeaderTitle from '@/Components/HeaderTitle.vue';
 import { Head } from '@inertiajs/vue3';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
-import { ArrowLeft, BookOpen, Building2, MapPin, Phone, Plus } from 'lucide-vue-next';
+import { ArrowLeft, BookOpen, Building2, Download, MapPin, Phone, Play, Plus } from 'lucide-vue-next';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import ContentManagerModal from '@/Components/ContentManagerModal.vue';
+import { ref, computed } from 'vue';
+import ContentTypeIcon from '@/Components/ContentTypeIcon.vue';
+import { useFormatters } from '@/Composables/useFormatters';
 
-defineProps({
+const { formatDate } = useFormatters();
+
+const props = defineProps({
     company: Object,
+    libraryContents: Array,
+});
+
+const attachedContentIds = computed(() => {
+    if (!props.company?.contents) return [];
+    return props.company.contents.map(content => content.id);
 });
 
 function onBack() {
     window.history.back();
 }
+
+const isModalVisible = ref(false);
 </script>
 
 <template>
@@ -54,7 +68,7 @@ function onBack() {
                     </div>
                     <div class="info-group">
                         <h3 class="text-text-secondary font-semibold">Responsável</h3>
-                        <p>{{ company.accountant_name }}</p>
+                        <p>{{ company.accountant_name || '__' }}</p>
                     </div>
                 </div>
             </div>
@@ -91,11 +105,42 @@ function onBack() {
                     <BookOpen class="w-6 h-6" />
                     <h2 class="font-semibold">Conteúdo</h2>
                 </div>
-                <PrimaryButton :icon="Plus" @click="onCreate">
+                <PrimaryButton :icon="Plus" @click="isModalVisible = true">
                     <span class="mt-1">Adicionar</span>
-                </PrimaryButton>   
+                </PrimaryButton>
+            </div>
+
+            <div v-if="company.contents.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div v-for="content in company.contents" :key="content.id" class="p-6 flex gap-4 bg-white shadow-md rounded-lg">
+                    <div class="flex items-center gap-4">
+                        <ContentTypeIcon :type="content.type" size="w-8 h-8" />
+                    </div>
+                    <div class="flex justify-between items-center w-full">
+                        <div class="flex-grow">
+                            <h3 class="text-text-primary font-semibold">{{ content.title }}</h3>
+                            <p class="text-text-secondary text-sm">{{ formatDate(content.created_at) }}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <Download class="w-6 h-6" />
+                            <Play v-if="content.type === 'video'" class="w-6 h-6" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-else>
+                <p>Nenhum conteúdo adicionado.</p>
             </div>
         </div>
     </AuthenticatedLayout>
+    <ContentManagerModal
+        modalTitle="Gerenciar Conteúdo"
+        modalDescription="Gerencie o conteúdo da empresa"
+        :attachment-url="route('companies.contents.store', { company: company.id })"
+        :show="isModalVisible"
+        @close="isModalVisible = false"
+        :contents="libraryContents"
+        :contentable-id="company.id"
+        :contentable-type="'App\\Models\\Company'"
+        :initial-selected-ids="attachedContentIds"
+    />
 </template>
-    

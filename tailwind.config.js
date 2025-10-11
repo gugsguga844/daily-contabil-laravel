@@ -22,6 +22,7 @@ export default {
                     light: '#1A5A78',   // mapeando para primary.light
                     dark: '#072433',    // mapeando para primary.dark
                     accent: '#D97706',  // alias prático para accent.DEFAULT
+                    accentlight: '#FFFBEB',
                 },
                 surface: {
                     // Planos de fundo por contexto

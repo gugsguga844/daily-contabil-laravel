@@ -2,7 +2,6 @@
 defineProps({
     title: String,
     subtitle: String,
-    // Accept Vue component constructors (functions/objects) or tag names
     icon: [Object, Function, String],
 });
 </script>

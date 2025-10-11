@@ -14,7 +14,7 @@ class CompanyController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
+        $user = request()->user();
 
         $companies = $user->office
             ->companies()
@@ -40,37 +40,31 @@ class CompanyController extends Controller
 
     public function show($company_id)
     {
-        $user = auth()->user();
+        $user = request()->user();
+        $office = $user->office;
 
-        $company = $user->office
+        $company = $office
             ->companies()
-            ->with('accountant')
+            ->with('accountant', 'contents')
             ->findOrFail($company_id);
 
+        $company->setAttribute('accountant_name', optional($company->accountant)->name);
+
+        $libraryContents = $office
+            ->contents()
+            ->with('uploader')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return Inertia::render('Companies/Show', [
-            'company' => [
-                'id' => $company->id,
-                'name' => $company->name,
-                'fantasy_name' => $company->fantasy_name,
-                'cnpj' => $company->cnpj,
-                'tax_regime' => $company->tax_regime?->value,
-                'tax_regime_label' => $company->tax_regime?->label(),
-                'is_active' => $company->is_active,
-                'accountant_name' => optional($company->accountant)->name,
-                'phone' => $company->phone,
-                'email' => $company->email,
-                'street' => $company->street,
-                'number' => $company->number,
-                'city' => $company->city,
-                'state' => $company->state,
-                'zip_code' => $company->zip_code,
-            ],
+            'company' => $company,
+            'libraryContents' => $libraryContents,
         ]);
     }
 
     public function create(): Response
     {
-        $office = auth()->user()->office;
+        $office = request()->user()->office;
 
         $accountants = $office->users()->get()->map(function (User $user) {
             return [
@@ -114,8 +108,8 @@ class CompanyController extends Controller
             'state' => $request->state,
             'zip_code' => $request->zip_code,
             'is_active' => true,
-            'creator_id' => auth()->id(),
-            'office_id' => optional(auth()->user())->office_id,
+            'creator_id' => optional(request()->user())->id,
+            'office_id' => optional(request()->user())->office_id,
             'accountant_id' => $request->accountant_id,
         ]);
 
