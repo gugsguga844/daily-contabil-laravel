@@ -14,7 +14,7 @@ class CompanyController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
+        $user = request()->user();
 
         $companies = $user->office
             ->companies()
@@ -40,13 +40,15 @@ class CompanyController extends Controller
 
     public function show($company_id)
     {
-        $user = auth()->user();
+        $user = request()->user();
         $office = $user->office;
 
         $company = $office
             ->companies()
             ->with('accountant', 'contents')
             ->findOrFail($company_id);
+
+        $company->setAttribute('accountant_name', optional($company->accountant)->name);
 
         $libraryContents = $office
             ->contents()
@@ -62,7 +64,7 @@ class CompanyController extends Controller
 
     public function create(): Response
     {
-        $office = auth()->user()->office;
+        $office = request()->user()->office;
 
         $accountants = $office->users()->get()->map(function (User $user) {
             return [
@@ -106,8 +108,8 @@ class CompanyController extends Controller
             'state' => $request->state,
             'zip_code' => $request->zip_code,
             'is_active' => true,
-            'creator_id' => auth()->id(),
-            'office_id' => optional(auth()->user())->office_id,
+            'creator_id' => optional(request()->user())->id,
+            'office_id' => optional(request()->user())->office_id,
             'accountant_id' => $request->accountant_id,
         ]);
 

@@ -1,17 +1,19 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import SearchInput from './SearchInput.vue';
 import FormSelect from './FormSelect.vue';
-import { Calendar, CalendarPlus, Check, CheckCircle, Circle, Funnel, Plus, Upload, User, X } from 'lucide-vue-next';
+import { CalendarPlus, Check, CheckCircle, Circle, Funnel, Plus, Upload, User, X } from 'lucide-vue-next';
 import PrimaryButton from './PrimaryButton.vue';
 import SecondaryButton from './SecondaryButton.vue';
 import { router } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
 import ContentTypeIcon from '@/Components/ContentTypeIcon.vue';
+import { useFormatters } from '@/Composables/useFormatters';
+
+const { formatDate, formatBytes } = useFormatters();
 
 const props = defineProps({
     show: Boolean,
-    default: false,
     modalTitle: String,
     modalDescription: String,
     contentableId: Number,
@@ -68,13 +70,13 @@ const sortedContents = computed(() => {
     return [...props.contents].sort((a, b) => {
         const aIsSelected = isSelected(a.id);
         const bIsSelected = isSelected(b.id);
-        
+
         if (aIsSelected && !bIsSelected) return -1;
         if (!aIsSelected && bIsSelected) return 1;
         return 0;
     })
 })
-    
+
 
 watch(() => props.show, (isShown) => {
     if (isShown) {
@@ -98,14 +100,14 @@ function addFiles(newFiles) {
             file: file,
         })
 
-        return {
+        return reactive({
             id: Date.now() + Math.random(),
             file: file,
             form: form,
             progress: 0,
             status: 'pending',
             db_id: null,
-        }
+        })
     });
 
     filesToUpload.value = [...filesToUpload.value, ...newUploads];
@@ -156,28 +158,6 @@ function removeFile(upload) {
         })
     }
 }
-
-function formatDate(isoString, timeZone = 'America/Sao_Paulo') {
-    if(!isoString) return '';
-    const d = new Date(isoString);
-    if(isNaN(d)) return '';
-    return new Intl.DateTimeFormat('pt-BR', {
-        timeZone,
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-    }).format(d);
-}
-
-function formatBytes(bytes, locale = 'pt-BR') {
-    if(bytes === null || bytes === undefined) return '';
-    const b = Number(bytes);
-    if(!isFinite(b)) return '';
-    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(Math.max(b, 1)) / Math.log(1024));
-    const value = b / Math.pow(1024, i);
-    return `${value.toFixed(value < 10 && i > 0 ? 1 : 0)} ${units[i]}`;
-}
 </script>
 
 <template>
@@ -211,7 +191,7 @@ function formatBytes(bytes, locale = 'pt-BR') {
 
             <div class="flex-grow overflow-y-auto mt-4 border-t pt-4 min-h-0">
                 <div v-if="activeTab == 'library'">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto p-1">
+                    <div v-if="sortedContents.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto p-1">
                         <div
                             v-for="content in sortedContents"
                             :key="content.id"
@@ -249,16 +229,19 @@ function formatBytes(bytes, locale = 'pt-BR') {
                             <span v-if="content.size_bytes" class="text-text-secondary text-xs">{{ formatBytes(content.size_bytes) }}</span>
                         </div>
                     </div>
+                    <div v-else>
+                        <p>Nenhum conteúdo encontrado.</p>
+                    </div>
                 </div>
 
                 <div v-if="activeTab == 'upload'">
                     <input type="file" multiple ref="fileInputRef" @change="handleFileSelection" class="hidden" />
-                    <div 
-                        @dragover.prevent="isDragging = true" 
+                    <div
+                        @dragover.prevent="isDragging = true"
                         @dragleave.prevent="isDragging = false"
                         @drop.prevent="handleFileDrop"
                         :class="isDragging ? 'bg-brand-accentlight border-brand-accent' : 'bg-white border-gray-300'"
-                        class="dropzone border-dashed border-2 rounded-lg py-8 flex flex-col items-center gap-4" 
+                        class="dropzone border-dashed border-2 rounded-lg py-8 flex flex-col items-center gap-4"
                         >
                         <Upload class="w-5 h-5 text-text-secondary" />
                         <div class="flex flex-col items-center">
@@ -281,17 +264,17 @@ function formatBytes(bytes, locale = 'pt-BR') {
                             <div class="flex flex-col">
                                 <h4 class="font-semibold text-text-primary text-md">{{ upload.file.name }}</h4>
                                 <div v-if="upload.status === 'uploading'" class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
-                                    <div class="bg-green-500 h-1.5 rounded-full" :style="{ width: upload.progress + '%' }"></div>
+                                    <div class="bg-green-500 h-1.5 rounded-full transition-all duration-300 ease-out" :style="{ width: upload.progress + '%' }"></div>
                                 </div>
                                 <div v-else-if="upload.status === 'completed'" class="flex items-center gap-2 text-green-500 text-sm font-semibold">
-                                    <CheckCircle class="w-5 h-5" /> 
+                                    <CheckCircle class="w-5 h-5" />
                                     <span class="mt-1">Upload Concluído</span>
                                 </div>
                                 <div v-else-if="upload.status === 'error'" class="flex items-center gap-2 text-red-500">
                                     <X class="w-5 h-5" /> Upload Falhou
                                 </div>
                             </div>
-                            <button class="ml-auto" @click="removeFile(upload)"><X class="w-5 h-5" /></button>                           
+                            <button class="ml-auto" @click="removeFile(upload)"><X class="w-5 h-5" /></button>
                         </div>
                     </div>
 

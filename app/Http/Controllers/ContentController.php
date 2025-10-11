@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Content;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Content;
 
 class ContentController extends Controller
 {
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'file' => 'required|file|max:512000'
+            'file' => 'required|file|max:512000',
         ]);
         $file = $validated['file'];
 
@@ -43,10 +43,19 @@ class ContentController extends Controller
 
     private function determineTypeFromMime($mimeType)
     {
-        if (str_starts_with($mimeType, 'image/')) return 'imagem';
-        if (str_starts_with($mimeType, 'video/')) return 'video';
-        if (in_array($mimeType, ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])) return 'documento';
-        if (in_array($mimeType, ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])) return 'planilha';
+        if (str_starts_with($mimeType, 'image/')) {
+            return 'imagem';
+        }
+        if (str_starts_with($mimeType, 'video/')) {
+            return 'video';
+        }
+        if (in_array($mimeType, ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])) {
+            return 'documento';
+        }
+        if (in_array($mimeType, ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])) {
+            return 'planilha';
+        }
+
         return 'outro';
     }
 }

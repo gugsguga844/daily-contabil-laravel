@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Company;
+use Illuminate\Http\Request;
 
 class CompanyContentController extends Controller
 {
     public function store(Request $request, Company $company)
     {
         $validated = $request->validate([
-            'content_ids' => 'required|array',
+            'content_ids' => 'present|array',
             'content_ids.*' => 'integer|exists:contents,id',
         ]);
 
