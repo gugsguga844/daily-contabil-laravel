@@ -21,10 +21,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('contents', function (Blueprint $table) {
-            $table->dropForeign(['office_id']);
-            $table->dropIndex(['office_id']);
-            $table->dropColumn('office_id');
-        });
+        if (Schema::hasColumn('contents', 'office_id')) {
+            Schema::table('contents', function (Blueprint $table) {
+                $table->dropConstrainedForeignId('office_id');
+            });
+        }
     }
 };
