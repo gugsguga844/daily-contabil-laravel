@@ -5,7 +5,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SmallHeaderTitle from '@/Components/SmallHeaderTitle.vue';
 import TextInput from '@/Components/TextInput.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Building2, Plus } from 'lucide-vue-next';
+import { Building2, GripHorizontal, GripVertical, Plus, SquarePen, Trash, Trash2 } from 'lucide-vue-next';
 import InputLabel from '@/Components/InputLabel.vue';
 import FormSelect from '@/Components/FormSelect.vue';
 import { useForm } from '@inertiajs/vue3';
@@ -13,9 +13,14 @@ import { useEditor, EditorContent } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import StepEditorModal from '@/Components/StepEditorModal.vue';
 import { ref } from 'vue';
+import draggable from 'vuedraggable';
 
 defineProps({
     categories: Array,
+    libraryContents: {
+        type: Array,
+        default: () => [],
+    },
 })
 
 const isStepModalVisible = ref(false);
@@ -42,7 +47,9 @@ const editor = useEditor({
     },
 })
 
-function handleStepSave(newStep) {
+function handleStepSave(newStepFromModal) {
+    newStepFromModal.temp_id = Date.now();
+    form.steps.push(newStepFromModal);
     isStepModalVisible.value = false;
 }
     
@@ -162,7 +169,7 @@ function removeStep(index) {
                 </div>
             </div>
 
-            <div class="bg-white shadow-sm rounded-lg p-6">
+            <div class="bg-white shadow-sm rounded-lg p-6 flex flex-col gap-6">
                 <div class="flex justify-between items-center gap-4">
                     <div class="flex gap-2">
                         <IconButton class="my-2" :icon="Building2" />
@@ -172,15 +179,42 @@ function removeStep(index) {
                         <span class="mt-1">Adicionar Etapa</span>
                     </PrimaryButton>
                 </div>
+
                 <div v-if="form.steps.length === 0" class="text-center p-8 border-2 border-dashed rounded-lg mt-4">
                     <p class="text-gray-500">Nenhuma etapa adicionada</p>
                     <button type="button" @click="addStep" class="mt-2 text-blue-600 font-semibold">
                         Comece adicionando a primeira etapa
                     </button>
                 </div>
+
+                <div v-else class="space-y-4">
+                    <draggable v-model="form.steps"></draggable>
+                    <div v-for="(step, index) in form.steps" :key="step.temp_id" class="flex items-center justify-between gap-2 mb-4 bg-surface border border-text-secondary border-opacity-50 p-4 rounded-lg">
+                        <div class="flex items-center gap-2">
+                            <GripVertical class="w-4 h-4" />
+                            <span class="text-text-secondary text-sm bg-gray-200 px-2 py-1 rounded">{{ 'Etapa: ' + (index + 1) }}</span>
+                            <div>
+                                <p class="font-semibold">{{ step.title }}</p>
+                                <p class="text-xs text-gray-500">{{ step.description }}</p>
+                                <p v-if="step.content_id" class="text-xs text-gray-500">1 material anexado: {{ step.content.title }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div class="flex items-center gap-2 mt-1">
+                                <SquarePen class="w-4 h-4" />
+                                <button type="button" @click="isStepModalVisible = true" class="text-text-primary font-semibold">
+                                    Editar
+                                </button>
+                            </div>
+                            <button type="button" @click="removeStep(step.temp_id)" class="text-red-600 font-semibold">
+                                <Trash2 class="w-4 h-4 text-red-600" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
-        <StepEditorModal 
+        <StepEditorModal
             :show="isStepModalVisible" 
             :contents="libraryContents"
             @close="isStepModalVisible = false" 

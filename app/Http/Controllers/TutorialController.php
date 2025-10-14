@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Content;
 use Inertia\Inertia;
 
 class TutorialController extends Controller
@@ -25,8 +26,14 @@ class TutorialController extends Controller
             ->orderBy('name')    
             ->get(['id', 'name']);
 
+        $libraryContents = Content::where('office_id', auth()->user()->office_id)
+            ->with('uploader')
+            ->latest()
+            ->get(['id', 'title', 'type', 'path_or_content', 'office_id', 'uploader_id', 'size_bytes', 'created_at']);
+
         return Inertia::render('Tutorials/Create', [
             'categories' => $categories,
+            'libraryContents' => $libraryContents,
         ]);
     }
 

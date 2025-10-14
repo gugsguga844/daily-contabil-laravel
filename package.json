@@ -27,6 +27,7 @@
     "dependencies": {
         "@tiptap/starter-kit": "^3.7.0",
         "@tiptap/vue-3": "^3.7.0",
-        "lucide-vue-next": "^0.544.0"
+        "lucide-vue-next": "^0.544.0",
+        "vuedraggable": "^4.1.0"
     }
 }

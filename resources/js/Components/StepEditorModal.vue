@@ -48,8 +48,18 @@ function removeContent() {
     stepData.value.content = null;
 }
 
+function resetForm() {
+    stepData.value = {
+        title: '',
+        description: '',
+        content_id: null,
+        content: null,
+    }
+}
+
 function saveStep() {
-    emit('save', {});
+    emit('save', stepData.value);
+    resetForm();
 }
 </script>
 
@@ -109,11 +119,12 @@ function saveStep() {
             </form>
             <div class="flex gap-4">
                 <SecondaryButton @click="emit('close')">Cancelar</SecondaryButton>
-                <PrimaryButton @click="saveStep">Adicionar Etapa</PrimaryButton>
+                <PrimaryButton type="submit" @click="saveStep">Adicionar Etapa</PrimaryButton>
             </div>
         </div>
     </div>
     <ContentManagerModal 
+        v-if="isContentModalVisible"
         :show="isContentModalVisible" 
         :contents="props.contents"
         :initial-selected-ids="stepData.content_id ? [stepData.content_id] : []"
