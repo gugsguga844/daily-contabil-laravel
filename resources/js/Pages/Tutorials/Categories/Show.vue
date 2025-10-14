@@ -3,10 +3,15 @@ import HeaderTitle from '@/Components/HeaderTitle.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Plus } from 'lucide-vue-next';
+import { Link, router } from '@inertiajs/vue3';
 
 const props = defineProps({
     category: Object,
 });
+
+function createTutorial() {
+    router.get(route('tutorials.create', { category_id: props.category.id }));
+}
 
 </script>
 
@@ -15,8 +20,8 @@ const props = defineProps({
         <div class="flex gap-4 mb-8 justify-between">
             <HeaderTitle :title="category.name" :subtitle="category.description" />
             <div class="flex gap-4 py-2">
-                <PrimaryButton :icon="Plus" @click="onCreate">
-                    <span class="mt-1">Nova Categoria</span>
+                <PrimaryButton :icon="Plus" @click="createTutorial">
+                    <span class="mt-1">Novo Tutorial</span>
                 </PrimaryButton>
             </div>
         </div>
@@ -35,7 +40,7 @@ const props = defineProps({
                         <div class="flex justify-between">
                             <div class="flex gap-2">
                                 <component :is="getIconComponent(tutorial.icon_name)" class="w-6 h-6" :style="{ color: tutorial.icon_color }" />
-                                <p class="text-text-primary font-semibold">{{ tutorial.name }}</p>
+                                <p class="text-text-primary font-semibold">{{ tutorial.title }}</p>
                             </div>
                             <p class="bg-text-primary text-white px-2 py-1 rounded text-xs">{{ tutorial.tutorials_count }} tutoriais</p>
                         </div>
