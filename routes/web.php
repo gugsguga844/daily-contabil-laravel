@@ -1,18 +1,14 @@
 <?php
 
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 use App\Http\Controllers\CompanyContentController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
-<<<<<<< HEAD
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-=======
-use App\Http\Controllers\CompanyContentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TutorialController;
->>>>>>> 6becadb (Create migrations, models, controllers and categories' seeders)
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
