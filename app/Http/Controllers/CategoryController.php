@@ -49,7 +49,7 @@ class CategoryController extends Controller
         }
 
         $category->load(['tutorials' => function ($query) {
-            $query->where('status', 'Publicado')->latest();
+            $query->where('status', 'published')->latest();
         }]);
 
         return Inertia::render('Tutorials/Categories/Show', [

@@ -26,15 +26,25 @@ const props = defineProps({
     initialSelectedIds: {
         type: Array,
         default: () => [],
+    },
+    allowMultiple: {
+        type: Boolean,
+        default: true,
     }
 })
 
 function toggleSelection(contentId) {
-    const index = selectedContentIds.value.indexOf(contentId);
-    if (index === -1) {
-        selectedContentIds.value.push(contentId);
+    if (!props.allowMultiple) {
+        if (selectedContentIds.value[0] !== contentId) {
+            selectedContentIds.value = [contentId];
+        }
     } else {
-        selectedContentIds.value.splice(index, 1);
+        const index = selectedContentIds.value.indexOf(contentId);
+        if (index === -1) {
+            selectedContentIds.value.push(contentId);
+        } else {
+            selectedContentIds.value.splice(index, 1);
+        }
     }
 }
 

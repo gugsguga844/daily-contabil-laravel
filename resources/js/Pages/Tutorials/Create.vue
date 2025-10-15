@@ -5,17 +5,20 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SmallHeaderTitle from '@/Components/SmallHeaderTitle.vue';
 import TextInput from '@/Components/TextInput.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Building2, GripHorizontal, GripVertical, Plus, SquarePen, Trash, Trash2 } from 'lucide-vue-next';
+import { Building2, GripHorizontal, GripVertical, Plus, Save, SquarePen, Trash, Trash2, X } from 'lucide-vue-next';
 import InputLabel from '@/Components/InputLabel.vue';
 import FormSelect from '@/Components/FormSelect.vue';
 import { useForm } from '@inertiajs/vue3';
 import { useEditor, EditorContent } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import StepEditorModal from '@/Components/StepEditorModal.vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import draggable from 'vuedraggable';
+import ContentManagerModal from '@/Components/ContentManagerModal.vue';
+import ContentTypeIcon from '@/Components/ContentTypeIcon.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 
-defineProps({
+const props = defineProps({
     categories: Array,
     libraryContents: {
         type: Array,
@@ -24,6 +27,7 @@ defineProps({
 })
 
 const isStepModalVisible = ref(false);
+const isSupportingMaterialModalVisible = ref(false);
 
 const form = useForm({
     title: '',
@@ -47,6 +51,12 @@ const editor = useEditor({
     },
 })
 
+const selectedSupportingMaterials = computed(() => {
+    return form.supporting_material_ids.map(id => {
+        return props.libraryContents.find(content => content.id === id);
+    }).filter(content => content);
+})
+
 function handleStepSave(newStepFromModal) {
     newStepFromModal.temp_id = Date.now();
     form.steps.push(newStepFromModal);
@@ -64,8 +74,25 @@ function addStep() {
     })
 }
 
-function removeStep(index) {
-    form.steps.splice(index, 1)
+function removeStep(tempId) {
+    form.steps = form.steps.filter(s => s.temp_id !== tempId)
+}
+
+function handleSupportingMaterialSelection(selectedIds) {
+    form.supporting_material_ids = selectedIds;
+    isSupportingMaterialModalVisible.value = false;
+}
+
+function removeSupportingMaterial(contentIdToRemove) {
+    form.supporting_material_ids = form.supporting_material_ids.filter(id => id !== contentIdToRemove);
+}
+
+function onSubmit() {
+    form.post(route('tutorials.store'), {
+        onSuccess: () => {
+            form.reset();
+        }
+    });
 }
 </script>
 
@@ -80,7 +107,7 @@ function removeStep(index) {
             </div>
         </div>
 
-        <form class="flex flex-col gap-6">
+        <form @submit.prevent="onSubmit" class="flex flex-col gap-6">
             <div class="bg-white shadow-sm rounded-lg p-6">
                 <div class="flex gap-4">
                     <IconButton class="my-2" :icon="Building2" />
@@ -94,8 +121,8 @@ function removeStep(index) {
                             type="text"
                             class="mt-1 block w-full"
                             v-model="form.title"
-                            required
                             autofocus
+                            required
                             autocomplete="username"
                         />
                     </div>
@@ -106,7 +133,6 @@ function removeStep(index) {
                             type="text"
                             class="mt-1 block w-full"
                             v-model="form.description"
-                            required
                             autofocus
                             autocomplete="username"
                         />
@@ -132,7 +158,6 @@ function removeStep(index) {
                             id="category_id"
                             v-model="form.category_id"
                             :options="categories"
-                            required
                             autofocus
                             autocomplete="username"
                         />
@@ -146,7 +171,6 @@ function removeStep(index) {
                                 { value: 'draft', label: 'Rascunho' },
                                 { value: 'published', label: 'Publicado' },
                             ]"
-                            required
                             autofocus
                             autocomplete="username"
                         />
@@ -161,7 +185,6 @@ function removeStep(index) {
                                 { value: 'intermediate', label: 'Intermediário' },
                                 { value: 'advanced', label: 'Avançado' },
                             ]"
-                            required
                             autofocus
                             autocomplete="username"
                         />
@@ -175,9 +198,9 @@ function removeStep(index) {
                         <IconButton class="my-2" :icon="Building2" />
                         <SmallHeaderTitle title="Etapas do Tutorial" subtitle="Organize as aulas deste tutorial (arraste para reordenar)" />
                     </div>
-                    <PrimaryButton :icon="Plus" @click="isStepModalVisible = true">
+                    <SecondaryButton :icon="Plus" @click.stop.prevent="isStepModalVisible = true">
                         <span class="mt-1">Adicionar Etapa</span>
-                    </PrimaryButton>
+                    </SecondaryButton>
                 </div>
 
                 <div v-if="form.steps.length === 0" class="text-center p-8 border-2 border-dashed rounded-lg mt-4">
@@ -188,30 +211,75 @@ function removeStep(index) {
                 </div>
 
                 <div v-else class="space-y-4">
-                    <draggable v-model="form.steps"></draggable>
-                    <div v-for="(step, index) in form.steps" :key="step.temp_id" class="flex items-center justify-between gap-2 mb-4 bg-surface border border-text-secondary border-opacity-50 p-4 rounded-lg">
-                        <div class="flex items-center gap-2">
-                            <GripVertical class="w-4 h-4" />
-                            <span class="text-text-secondary text-sm bg-gray-200 px-2 py-1 rounded">{{ 'Etapa: ' + (index + 1) }}</span>
-                            <div>
-                                <p class="font-semibold">{{ step.title }}</p>
-                                <p class="text-xs text-gray-500">{{ step.description }}</p>
-                                <p v-if="step.content_id" class="text-xs text-gray-500">1 material anexado: {{ step.content.title }}</p>
+                    <draggable
+                        v-model="form.steps"
+                        item-key="temp_id"
+                        handle=".handle"
+                        ghost-class="ghost"
+                    >
+                        <template #item="{ element: step, index }">
+                            <div class="cursor-move handle flex items-center justify-between gap-2 mb-4 bg-surface border border-text-secondary border-opacity-50 p-4 rounded-lg">
+                                <div class="flex items-center gap-4">
+                                    <GripVertical class="w-4 h-4" />
+                                    <span class="text-text-secondary text-sm bg-gray-200 px-2 py-1 rounded">{{ 'Etapa: ' + (index + 1) }}</span>
+                                    <div>
+                                        <p class="font-semibold">{{ step.title }}</p>
+                                        <p class="text-xs text-gray-500">{{ step.description }}</p>
+                                        <p v-if="step.content_id" class="text-xs text-gray-500">1 material anexado: {{ step.content.title }}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-6">
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <button type="button" @click="isStepModalVisible = true" class="flex text-text-primary font-semibold items-center">
+                                            <SquarePen class="w-4 h-4" /> 
+                                            <span class="ml-2">Editar</span>
+                                        </button>
+                                    </div>
+                                    <button type="button" @click="removeStep(step.temp_id)" class="text-red-600 font-semibold">
+                                        <Trash2 class="w-4 h-4 text-red-600" />
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="flex items-center gap-6">
-                            <div class="flex items-center gap-2 mt-1">
-                                <SquarePen class="w-4 h-4" />
-                                <button type="button" @click="isStepModalVisible = true" class="text-text-primary font-semibold">
-                                    Editar
-                                </button>
-                            </div>
-                            <button type="button" @click="removeStep(step.temp_id)" class="text-red-600 font-semibold">
-                                <Trash2 class="w-4 h-4 text-red-600" />
-                            </button>
-                        </div>
+                        </template>
+                    </draggable>
+                </div>
+            </div>
+
+            <div class="bg-white shadow-sm rounded-lg p-6 flex flex-col gap-6">
+                <div class="flex justify-between items-center gap-4">
+                    <div class="flex gap-2">
+                        <IconButton class="my-2" :icon="Building2" />
+                        <SmallHeaderTitle title="Materiais de Apoio Geral" subtitle="Organize os materiais de apoio deste tutorial (arraste para reordenar)" />
+                    </div>
+                    <SecondaryButton :icon="Plus" @click.stop.prevent="isSupportingMaterialModalVisible = true">
+                        <span class="mt-1">Adicionar Material</span>
+                    </SecondaryButton>
+                </div>
+                <div v-if="selectedSupportingMaterials.length === 0" class="text-center p-8 border-2 border-dashed rounded-lg mt-4">
+                    <p class="text-gray-500">Nenhum material adicionado</p>
+                    <button type="button" @click="isSupportingMaterialModalVisible = true" class="mt-2 text-blue-600 font-semibold">
+                        Adicionar Material
+                    </button>
+                </div>
+                <div v-else>
+                    <div
+                        v-for="material in selectedSupportingMaterials"
+                        :key="material.id"
+                        class="bg-surface border border-text-secondary border-opacity-50 p-4 rounded-lg mb-4 flex items-center justify-between"
+                    >
+                    <div class="flex items-center gap-3">
+                        <ContentTypeIcon :type="material.type" size="w-6 h-6" />
+                        <span class="font-semibold text-sm">{{ material.title }}</span>
+                    </div>
+                    <button type="button" @click="removeSupportingMaterial(material.id)" class="text-red-500">
+                        <X class="w-4 h-4" />
+                    </button>
                     </div>
                 </div>
+            </div>
+            <div class="flex gap-4">
+                <SecondaryButton :icon="X">Cancelar</SecondaryButton>
+                <PrimaryButton :icon="Save" type="submit">Salvar</PrimaryButton>
             </div>
         </form>
         <StepEditorModal
@@ -220,6 +288,19 @@ function removeStep(index) {
             @close="isStepModalVisible = false" 
             @save="handleStepSave"
         />
+        <ContentManagerModal
+            v-if="isSupportingMaterialModalVisible"
+            :show="isSupportingMaterialModalVisible"
+            :contents="libraryContents"
+            :initial-selected-ids="form.supporting_material_ids"
+            @close="isSupportingMaterialModalVisible = false"
+            @confirm="handleSupportingMaterialSelection"
+            modalTitle="Selecionar Materiais de Apoio"
+            modalDescription="Escolha um ou mais ficheiros para anexar ao tutorial."
+            :attachmentUrl="null"
+            :allow-multiple="true" 
+        />
+
     </AuthenticatedLayout>
 </template>
 
@@ -235,6 +316,11 @@ function removeStep(index) {
 .ProseMirror:focus {
     outline: 2px solid #2563eb;
     outline-offset: -1px;
+}
+
+.ghost {
+    opacity: 0.5;
+    background: #c8ebfb;
 }
 </style>
 

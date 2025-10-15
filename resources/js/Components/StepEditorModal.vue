@@ -5,7 +5,8 @@ import TextInput from './TextInput.vue';
 import { ref } from 'vue';
 import ContentManagerModal from './ContentManagerModal.vue';
 import PrimaryButton from './PrimaryButton.vue';
-import { Plus } from 'lucide-vue-next';
+import { FileMinus, Plus, Trash2, X } from 'lucide-vue-next';
+import ContentTypeIcon from './ContentTypeIcon.vue';
 
 const props = defineProps({
     show: {
@@ -58,7 +59,8 @@ function resetForm() {
 }
 
 function saveStep() {
-    emit('save', stepData.value);
+    // Emit a shallow copy to avoid external mutations
+    emit('save', { ...stepData.value });
     resetForm();
 }
 </script>
@@ -92,30 +94,30 @@ function saveStep() {
                         autocomplete="description" />
                 </div>
                 <div class="content">
-                    <div class="flex justify-between">
+                    <div class="flex justify-between items-center mb-4">
                         <h2 class="text-sm font-medium text-text-primary">Conteúdo da Etapa</h2>
                         <SecondaryButton :icon="Plus" @click="isContentModalVisible = true">Adicionar Conteúdo</SecondaryButton>
                     </div>    
-                    <div v-if="!stepData.content_id" class="p-6 flex flex-col items-center gap-2">
-                        <p class="text-gray-500">Nenhum conteúdo adicionado</p>
-                        <button type="button" @click="isContentModalVisible = true" class="mt-1 text-blue-600 font-semibold">
+                    <div v-if="!stepData.content_id" class="p-6 flex flex-col items-center gap-2 border border-dashed border-text-secondary rounded-lg mb-4">
+                        <FileMinus class="w-12 h-12 text-text-secondary" />
+                        <p class="text-text-secondary">Nenhum conteúdo adicionado</p>
+                        <button type="button" @click="isContentModalVisible = true" class="mt-1 text-text-primary font-semibold">
                             + Adicionar Conteúdo
                         </button>    
                     </div>
-                    <div v-else class="mt-2 p-3 border rounded-lg flex items-center justify-between">
+                    <div v-else class="mt-2 p-3 border rounded-lg flex items-center justify-between mb-4">
                         <div class="flex items-center gap-2">
-                            <p class="text-text-primary">ICON</p>
+                            <ContentTypeIcon :type="stepData.content.type" />
                             <div>
                                 <p class="font-semibold">{{ stepData.content.title }}</p>
-                                <span class="text-xs text-gray-500">{{ stepData.content.type }}</span>
+                                <span class="text-xs text-text-secondary">{{ stepData.content.type }}</span>
                             </div>
                         </div>
-                        <button type="button" @click="removeContent" class="text-red-600">
-                            Remover
+                        <button type="button" @click="removeContent" class="text-text-danger">
+                            <X class="w-6 h-6 text-red-600" />
                         </button>
                     </div>
                 </div>
-                
             </form>
             <div class="flex gap-4">
                 <SecondaryButton @click="emit('close')">Cancelar</SecondaryButton>
@@ -133,5 +135,6 @@ function saveStep() {
         modalTitle="Selecionar Conteúdo para a Etapa"
         modalDescription="Escolha um vídeo, documento ou imagem da biblioteca"
         :attachmentUrl="null"
+        :allowMultiple="false"
     />
 </template>
