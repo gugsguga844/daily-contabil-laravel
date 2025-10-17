@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Content;
 use App\Models\Tutorial;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -78,7 +78,7 @@ class TutorialController extends Controller
                 'office_id' => auth()->user()->office_id,
             ]);
 
-            foreach($validated['steps'] as $index => $stepData) {
+            foreach ($validated['steps'] as $index => $stepData) {
                 $tutorial->steps()->create([
                     'title' => $stepData['title'],
                     'description' => $stepData['description'],
@@ -88,12 +88,12 @@ class TutorialController extends Controller
                 ]);
             }
 
-            if(!empty($validated['supporting_material_ids'])) {
+            if (! empty($validated['supporting_material_ids'])) {
                 $tutorial->supportingMaterials()->attach($validated['supporting_material_ids']);
             }
 
             return $tutorial;
-        }); 
+        });
 
         return redirect()->route('tutorials.show', $tutorial)->with('success', 'Tutorial criado com sucesso!');
     }

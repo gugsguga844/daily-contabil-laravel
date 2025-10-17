@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CategoryController extends Controller
@@ -49,7 +49,7 @@ class CategoryController extends Controller
         }
 
         $category->load(['tutorials' => function ($query) {
-            $query->where('status', 'published')->latest();
+            $query->where('status', 'published')->latest()->withCount('steps');
         }]);
 
         return Inertia::render('Tutorials/Categories/Show', [

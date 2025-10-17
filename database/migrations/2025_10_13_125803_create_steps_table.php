@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('steps', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->string('title');
-            $table->string('description')->nullable();
-            $table->unsignedInteger('order');
-            $table->foreignId('tutorial_id')->constrained('tutorials')->cascadeOnDelete();
-            $table->foreignId('office_id')->constrained('offices')->cascadeOnDelete();
-            $table->foreignId('content_id')->constrained('contents')->cascadeOnDelete();
-        });
+        if (! Schema::hasTable('steps')) {
+            Schema::create('steps', function (Blueprint $table) {
+                $table->id();
+                $table->timestamps();
+                $table->string('title');
+                $table->string('description')->nullable();
+                $table->unsignedInteger('order');
+                $table->foreignId('tutorial_id')->constrained('tutorials')->cascadeOnDelete();
+                $table->foreignId('office_id')->constrained('offices')->cascadeOnDelete();
+                $table->foreignId('content_id')->constrained('contents')->cascadeOnDelete();
+            });
+        }
     }
 
     /**

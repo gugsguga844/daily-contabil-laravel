@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreOfficeRequest;
 use App\Models\Office;
 use App\Models\User;
+use Database\Seeders\CategorySeeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
-use Database\Seeders\CategorySeeder;
 
 class OfficeController extends Controller
 {
@@ -44,7 +44,7 @@ class OfficeController extends Controller
                 'current_plan' => $officeData['current_plan'] ?? null,
             ]);
 
-            (new CategorySeeder())->run($office->id);
+            (new CategorySeeder)->run($office->id);
 
             // Create first user for Office (tenant owner by default)
             $role = $userData['role'] ?? 'office-owner';
