@@ -2,9 +2,11 @@
 import HeaderTitle from '@/Components/HeaderTitle.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Download, Play, Plus } from 'lucide-vue-next';
+import { Download, Funnel, Play, Plus } from 'lucide-vue-next';
 import { Link, router } from '@inertiajs/vue3';
 import { useFormatters } from '@/Composables/useFormatters';
+import SearchInput from '@/Components/SearchInput.vue';
+import IconTextButton from '@/Components/IconTextButton.vue';
 
 const props = defineProps({
     category: {
@@ -55,6 +57,14 @@ function createTutorial() {
                 </PrimaryButton>
             </div>
         </div>
+
+        <div class="flex gap-4 mt-8 mb-8">
+            <SearchInput placeholder="Buscar tutorial" />
+            <IconTextButton :icon="Funnel">
+                Filtros
+            </IconTextButton>
+        </div>
+
         <div v-if="category.tutorials.length === 0">
             <p class="text-text-secondary">Nenhum tutorial cadastrado</p>
         </div>
@@ -74,7 +84,7 @@ function createTutorial() {
                                 <p class="text-text-primary font-semibold">{{ tutorial.title }}</p>
                                 <p class="text-text-secondary">{{ tutorial.description }}</p>
                             </div>
-                            <p class="bg-text-primary text-white px-2 py-1 flex items-center gap-2 rounded text-xs my-1"><Play class="w-5 h-5" /> </p>
+                            <p class="text-text-primary px-2 py-1 flex items-center gap-2 rounded text-xs my-1"><Play class="w-6 h-6" /> </p>
                         </div>
                         <div class="flex flex-col gap-2">
                             <div class="flex justify-between gap-2">

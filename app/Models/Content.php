@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Storage;
 
 class Content extends Model
 {
@@ -14,6 +16,15 @@ class Content extends Model
         'uploader_id',
         'size_bytes',
     ];
+
+    protected $appends = ['full_url'];
+
+    protected function fullUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Storage::disk('s3')->url($this->path_or_content),
+        );
+    }
 
     public function office()
     {

@@ -101,9 +101,20 @@ class TutorialController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Tutorial $tutorial)
     {
-        $tutorial = Tutorial::findOrFail($id);
+        if ($tutorial->office_id !== auth()->user()->office_id) {
+            abort(403);
+        }
+
+        $tutorial->load([
+            'category:id,name',
+            'steps' => function ($query) {
+                $query->orderBy('order');
+            },
+            'steps.content.uploader:id,name',
+            'supportingMaterials.uploader:id,name'
+        ]);
 
         return Inertia::render('Tutorials/Show', [
             'tutorial' => $tutorial,
