@@ -5,7 +5,7 @@ import TextInput from './TextInput.vue';
 import { ref } from 'vue';
 import ContentManagerModal from './ContentManagerModal.vue';
 import PrimaryButton from './PrimaryButton.vue';
-import { FileMinus, Plus, Trash2, X } from 'lucide-vue-next';
+import { FileMinus, Plus, X } from 'lucide-vue-next';
 import ContentTypeIcon from './ContentTypeIcon.vue';
 
 const props = defineProps({
@@ -75,7 +75,7 @@ function saveStep() {
 
             <form @submit.prevent="saveStep" class="flex flex-col gap-4">
                 <div>
-                    <InputLabel for="title" value="Título" />
+                    <InputLabel for="title" value="Título *" />
                     <TextInput 
                         id="title" 
                         v-model="stepData.title" 

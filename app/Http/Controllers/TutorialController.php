@@ -113,7 +113,7 @@ class TutorialController extends Controller
                 $query->orderBy('order');
             },
             'steps.content.uploader:id,name',
-            'supportingMaterials.uploader:id,name'
+            'supportingMaterials.uploader:id,name',
         ]);
 
         return Inertia::render('Tutorials/Show', [

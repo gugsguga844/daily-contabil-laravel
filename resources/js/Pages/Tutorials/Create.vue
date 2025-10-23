@@ -5,8 +5,8 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SmallHeaderTitle from '@/Components/SmallHeaderTitle.vue';
 import TextInput from '@/Components/TextInput.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Building2, GripHorizontal, GripVertical, Plus, Save, SquarePen, Trash, Trash2, X } from 'lucide-vue-next';
-import InputLabel from '@/Components/InputLabel.vue';
+import { Building2, GripVertical, Plus, Save, SquarePen, Trash2, X } from 'lucide-vue-next';
+import InputLabel from '@/Components/InputLabel.vue';   
 import FormSelect from '@/Components/FormSelect.vue';
 import { useForm } from '@inertiajs/vue3';
 import { useEditor, EditorContent } from '@tiptap/vue-3';
@@ -35,7 +35,6 @@ const form = useForm({
     long_description: '',
     level: null,
     category_id: null,
-    level: null,
     steps: [],
     supporting_material_ids: [],
     status: 'draft',
@@ -115,31 +114,33 @@ function onSubmit() {
                 </div>
                 <div class="grid grid-cols-3 gap-4 mt-6">
                     <div class="col-span-3">
-                        <InputLabel for="title">Nome</InputLabel>
+                        <InputLabel for="title">Nome *</InputLabel>
                         <TextInput
                             id="title"
                             type="text"
-                            class="mt-1 block w-full"
+                            :class="['mt-1 block w-full', form.errors.title && 'border-red-500 focus:border-red-500 focus:ring-red-500']"
                             v-model="form.title"
+                            autofocus
+                            autocomplete="username"
+                        />
+                        <p v-if="form.errors.title" class="mt-1 text-sm text-red-600">{{ form.errors.title }}</p>
+                    </div>
+                    <div class="col-span-3">
+                        <InputLabel for="description">Descrição Resumida *</InputLabel>
+                        <TextInput
+                            id="description"
+                            type="text"
+                            :class="['mt-1 block w-full', form.errors.description && 'border-red-500 focus:border-red-500 focus:ring-red-500']"
+                            v-model="form.description"
                             autofocus
                             required
                             autocomplete="username"
                         />
+                        <p v-if="form.errors.description" class="mt-1 text-sm text-red-600">{{ form.errors.description }}</p>
                     </div>
                     <div class="col-span-3">
-                        <InputLabel for="description">Descrição Resumida</InputLabel>
-                        <TextInput
-                            id="description"
-                            type="text"
-                            class="mt-1 block w-full"
-                            v-model="form.description"
-                            autofocus
-                            autocomplete="username"
-                        />
-                    </div>
-                    <div class="col-span-3">
-                        <InputLabel for="long_description">Descrição Detalhada</InputLabel>
-                        <div v-if="editor" class="border border-gray-300 rounded-t-lg p-2 flex items-center gap-2">
+                        <InputLabel for="long_description">Descrição Detalhada *</InputLabel>
+                        <div v-if="editor" :class="['border rounded-t-lg p-2 flex items-center gap-2 mt-1', form.errors.long_description ? 'border-red-500' : 'border-gray-300']">
                             <button type="button" @click="editor.chain().focus().toggleBold().run()" :class="{ 'bg-gray-200': editor.isActive('bold') }" class="p-1 rounded">
                                 Negrito
                             </button>
@@ -150,20 +151,26 @@ function onSubmit() {
                                 Lista
                             </button>
                         </div>
-                        <EditorContent :editor="editor" />
+                        <div :class="['border rounded-b-lg', form.errors.long_description ? 'border-red-500' : 'border-gray-300']">
+                            <EditorContent :editor="editor" />
+                        </div>
+                        <p v-if="form.errors.long_description" class="mt-1 text-sm text-red-600">{{ form.errors.long_description }}</p>
                     </div>
                     <div>
-                        <InputLabel for="category_id">Categoria</InputLabel>
+                        <InputLabel for="category_id">Categoria *</InputLabel>
                         <FormSelect
                             id="category_id"
                             v-model="form.category_id"
                             :options="categories"
                             autofocus
+                            required
+                            :class="[form.errors.category_id && 'border-red-500 focus:border-red-500 focus:ring-red-500']"
                             autocomplete="username"
                         />
+                        <p v-if="form.errors.category_id" class="mt-1 text-sm text-red-600">{{ form.errors.category_id }}</p>
                     </div>
                     <div>
-                        <InputLabel for="status">Status</InputLabel>
+                        <InputLabel for="status">Status *</InputLabel>
                         <FormSelect
                             id="status"
                             v-model="form.status"
@@ -172,11 +179,14 @@ function onSubmit() {
                                 { value: 'published', label: 'Publicado' },
                             ]"
                             autofocus
+                            required
+                            :class="[form.errors.status && 'border-red-500 focus:border-red-500 focus:ring-red-500']"
                             autocomplete="username"
                         />
+                        <p v-if="form.errors.status" class="mt-1 text-sm text-red-600">{{ form.errors.status }}</p>
                     </div>
                     <div>
-                        <InputLabel for="level">Nível</InputLabel>
+                        <InputLabel for="level">Nível *</InputLabel>
                         <FormSelect
                             id="level"
                             v-model="form.level"
@@ -186,8 +196,11 @@ function onSubmit() {
                                 { value: 'advanced', label: 'Avançado' },
                             ]"
                             autofocus
+                            required
+                            :class="[form.errors.level && 'border-red-500 focus:border-red-500 focus:ring-red-500']"
                             autocomplete="username"
                         />
+                        <p v-if="form.errors.level" class="mt-1 text-sm text-red-600">{{ form.errors.level }}</p>
                     </div>
                 </div>
             </div>
@@ -305,15 +318,17 @@ function onSubmit() {
 </template>
 
 <style scoped>
-.ProseMirror {
+:deep(.ProseMirror) {
     padding: 0.75rem;
     border: 1px solid #d1d5db;
     border-top: none;
     border-radius: 0 0 0.5rem 0.5rem;
-    min-height: 150px;
+    min-height: 300px;
+    max-height: 600px;
+    overflow-y: auto;
 }
 
-.ProseMirror:focus {
+:deep(.ProseMirror:focus) {
     outline: 2px solid #2563eb;
     outline-offset: -1px;
 }
@@ -323,4 +338,3 @@ function onSubmit() {
     background: #c8ebfb;
 }
 </style>
-

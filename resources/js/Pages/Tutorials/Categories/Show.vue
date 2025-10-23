@@ -70,7 +70,7 @@ function createTutorial() {
         </div>
         <div v-else>
             <div
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
             >
                 <Link
                     v-for="tutorial in category.tutorials"
@@ -80,9 +80,9 @@ function createTutorial() {
                 >
                     <div class="flex flex-col gap-6">
                         <div class="flex justify-between">
-                            <div class="flex-grow gap-2">
-                                <p class="text-text-primary font-semibold">{{ tutorial.title }}</p>
-                                <p class="text-text-secondary">{{ tutorial.description }}</p>
+                            <div class="flex-grow gap-2 min-w-0">
+                                <p class="text-text-primary font-semibold truncate break-words">{{ tutorial.title }}</p>
+                                <p class="text-text-secondary line-clamp-2 break-words">{{ tutorial.description }}</p>
                             </div>
                             <p class="text-text-primary px-2 py-1 flex items-center gap-2 rounded text-xs my-1"><Play class="w-6 h-6" /> </p>
                         </div>
@@ -102,3 +102,14 @@ function createTutorial() {
         </div>
     </AuthenticatedLayout>
 </template>
+
+<style scoped>
+/* Two-line clamp without Tailwind plugin */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2; /* standard property for compatibility */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>

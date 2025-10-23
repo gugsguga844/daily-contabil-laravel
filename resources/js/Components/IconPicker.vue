@@ -1,22 +1,17 @@
 <script setup>
-import { computed } from 'vue';
-// Importe os ícones que você quer oferecer da biblioteca que já usa
 import { BookOpen, Briefcase, Landmark, FileText, BarChart2 } from 'lucide-vue-next';
 
-const props = defineProps({
-    modelValue: String, // Recebe o nome do ícone selecionado via v-model
+defineProps({
+    modelValue: String,
 });
 
 const emit = defineEmits(['update:modelValue']);
-
-// Nossa paleta de ícones pré-definidos
 const availableIcons = [
     { name: 'BookOpen', component: BookOpen },
     { name: 'Briefcase', component: Briefcase },
     { name: 'Landmark', component: Landmark },
     { name: 'FileText', component: FileText },
     { name: 'BarChart2', component: BarChart2 },
-    // Adicione quantos ícones quiser...
 ];
 
 function selectIcon(iconName) {
