@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyContentController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TutorialController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -46,6 +48,15 @@ Route::post('/contents', [ContentController::class, 'store'])->name('contents.st
 Route::delete('/contents/{content}', [ContentController::class, 'destroy'])->name('contents.destroy');
 
 Route::post('/companies/{company}/contents', [CompanyContentController::class, 'store'])->name('companies.contents.store');
+
+Route::resource('/tutorials/categories', CategoryController::class)
+    ->middleware(['auth', 'verified'])
+    ->names('tutorials.categories')
+    ->except(['edit', 'update']);
+
+Route::resource('/tutorials', TutorialController::class)
+    ->middleware(['auth', 'verified'])
+    ->names('tutorials');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

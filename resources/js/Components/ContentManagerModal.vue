@@ -26,15 +26,25 @@ const props = defineProps({
     initialSelectedIds: {
         type: Array,
         default: () => [],
+    },
+    allowMultiple: {
+        type: Boolean,
+        default: true,
     }
 })
 
 function toggleSelection(contentId) {
-    const index = selectedContentIds.value.indexOf(contentId);
-    if (index === -1) {
-        selectedContentIds.value.push(contentId);
+    if (!props.allowMultiple) {
+        if (selectedContentIds.value[0] !== contentId) {
+            selectedContentIds.value = [contentId];
+        }
     } else {
-        selectedContentIds.value.splice(index, 1);
+        const index = selectedContentIds.value.indexOf(contentId);
+        if (index === -1) {
+            selectedContentIds.value.push(contentId);
+        } else {
+            selectedContentIds.value.splice(index, 1);
+        }
     }
 }
 
@@ -48,7 +58,7 @@ const attachmentForm = useForm({
     content_ids: [],
 });
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'confirm'])
 
 const activeTab = ref("library")
 
@@ -85,13 +95,23 @@ watch(() => props.show, (isShown) => {
 }, { immediate: true })
 
 function confirmSelection() {
-    attachmentForm.content_ids = [...selectedContentIds.value];
-    attachmentForm.post(props.attachmentUrl, {
-        onSuccess: () => {
-            emit('close')
-        },
-        preserveScroll: true,
-    });
+    const ids = [...selectedContentIds.value];
+
+    // If an attachmentUrl is provided, follow the server-post flow
+    if (props.attachmentUrl) {
+        attachmentForm.content_ids = ids;
+        attachmentForm.post(props.attachmentUrl, {
+            onSuccess: () => {
+                emit('close')
+            },
+            preserveScroll: true,
+        });
+        return;
+    }
+
+    // Otherwise, emit the selection to the parent (used by StepEditorModal)
+    emit('confirm', ids);
+    emit('close');
 }
 
 function addFiles(newFiles) {

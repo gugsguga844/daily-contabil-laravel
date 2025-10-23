@@ -22,11 +22,18 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('contents', function (Blueprint $table) {
-            $table->dropForeign(['uploader_id']);
-            $table->dropIndex(['uploader_id']);
-            $table->dropColumn('uploader_id');
-            $table->dropColumn('size_bytes');
-        });
+        // Use SQLite-safe drops. Check column existence and rely on dropConstrainedForeignId
+        // to remove the foreign key (and associated index) before dropping the column.
+        if (Schema::hasColumn('contents', 'uploader_id')) {
+            Schema::table('contents', function (Blueprint $table) {
+                $table->dropConstrainedForeignId('uploader_id');
+            });
+        }
+
+        if (Schema::hasColumn('contents', 'size_bytes')) {
+            Schema::table('contents', function (Blueprint $table) {
+                $table->dropColumn('size_bytes');
+            });
+        }
     }
 };
