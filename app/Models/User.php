@@ -53,4 +53,11 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Office::class);
     }
+
+    public function completedSteps()
+    {
+        return $this->belongsToMany(Step::class, 'step_user', 'user_id', 'step_id')
+            ->withPivot('completed_at')
+            ->withTimestamps();
+    }
 }

@@ -30,4 +30,10 @@ class Step extends Model
     {
         return $this->belongsTo(Content::class);
     }
+
+    public function completeByUsers()
+    {
+        return $this->belongsToMany(User::class, 'step_user', 'step_id', 'user_id')
+            ->withTimestamps('completed_at');
+    }
 }

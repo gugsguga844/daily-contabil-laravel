@@ -116,6 +116,16 @@ class TutorialController extends Controller
             'supportingMaterials.uploader:id,name',
         ]);
 
+        $completedStepsIds = auth()->user()
+            ->completedSteps()
+            ->whereIn('step_id', $tutorial->steps->pluck('id'))
+            ->pluck('step_id')
+            ->flip();
+
+        $tutorial->steps->each(function ($step) use ($completedStepsIds) {
+            $step->is_completed = isset($completedStepsIds[$step->id]);
+        });
+
         return Inertia::render('Tutorials/Show', [
             'tutorial' => $tutorial,
         ]);

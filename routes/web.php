@@ -5,6 +5,7 @@ use App\Http\Controllers\CompanyContentController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StepCompletionController;
 use App\Http\Controllers\TutorialController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +58,10 @@ Route::resource('/tutorials/categories', CategoryController::class)
 Route::resource('/tutorials', TutorialController::class)
     ->middleware(['auth', 'verified'])
     ->names('tutorials');
+
+Route::post('/steps/{step}/toggle-completion', [StepCompletionController::class, 'toggle'])
+    ->middleware(['auth', 'verified'])
+    ->name('steps.toggle-completion');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
