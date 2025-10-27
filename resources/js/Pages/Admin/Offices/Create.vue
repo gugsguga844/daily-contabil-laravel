@@ -20,7 +20,7 @@ const form = useForm({
     name: '',
     email: '',
     password: '',
-    role: 'office-owner',
+    role: 'office_owner',
   },
 });
 
@@ -118,7 +118,7 @@ function submit() {
           <div>
             <label class="block text-sm font-medium mb-1">Função</label>
             <select v-model="form.user.role" class="w-full border rounded p-2">
-              <option value="office-owner">Dono do Escritório</option>
+              <option value="office_owner">Dono do Escritório</option>
               <option value="admin">Administrador</option>
               <option value="worker">Colaborador</option>
             </select>

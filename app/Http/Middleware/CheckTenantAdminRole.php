@@ -7,27 +7,19 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Enums\UserRole;
 
-class AdminRole
+class CheckTenantAdminRole
 {
     /**
      * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
-
-        if (! $user) {
-            abort(403);
+        if (! $user || ! in_array($user->role, [UserRole::OFFICE_OWNER, UserRole::ADMIN], true)) {
+            abort(403, 'Unauthorized');
         }
-
-        // Only system users may access Admin UI
-        // Allowed roles: super-admin, implantation
-        $allowed = UserRole::systemRoles();
-
-        if (! in_array($user->role, $allowed, true)) {
-            abort(403);
-        }
-
         return $next($request);
     }
 }

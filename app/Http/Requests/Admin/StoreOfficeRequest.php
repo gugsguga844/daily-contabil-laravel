@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\Enums\UserRole;
 
 class StoreOfficeRequest extends FormRequest
 {
@@ -33,7 +35,8 @@ class StoreOfficeRequest extends FormRequest
             'user.name' => ['required', 'string', 'max:255'],
             'user.email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'user.password' => ['required', 'string', 'min:8'],
-            'user.role' => ['sometimes', 'in:office-owner,admin,worker'],
+            // Only tenant roles are valid for the first office user
+            'user.role' => ['sometimes', Rule::in(UserRole::tenantRoles())],
         ];
     }
 

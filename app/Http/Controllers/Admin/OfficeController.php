@@ -10,6 +10,7 @@ use Database\Seeders\CategorySeeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
+use App\Enums\UserRole;
 
 class OfficeController extends Controller
 {
@@ -47,7 +48,7 @@ class OfficeController extends Controller
             (new CategorySeeder)->run($office->id);
 
             // Create first user for Office (tenant owner by default)
-            $role = $userData['role'] ?? 'office-owner';
+            $role = $userData['role'] ?? UserRole::OFFICE_OWNER->value;
 
             $user = User::create([
                 'name' => $userData['name'],
