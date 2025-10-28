@@ -20,11 +20,9 @@ class AdminRole
             abort(403);
         }
 
-        // Only system users may access Admin UI
-        // Allowed roles: super-admin, implantation
         $allowed = UserRole::systemRoles();
 
-        if (! in_array($user->role, $allowed, true)) {
+        if (! in_array($user->role?->value, $allowed, true)) {
             abort(403);
         }
 
