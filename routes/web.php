@@ -69,7 +69,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Admin UI routes (system users only)
+// Tenant routes (tenant roles only)
+Route::prefix('manage')
+    ->middleware(['auth', 'verified', 'tenant.admin'])
+    ->name('manage.')
+    ->group(function () {
+        Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+    });
+
+// Admin UI routes (system roles only)
 Route::prefix('admin')
     ->middleware(['auth', 'verified', 'admin.role'])
     ->name('admin.')
@@ -85,5 +93,4 @@ Route::prefix('admin')
         Route::post('/offices', [\App\Http\Controllers\Admin\OfficeController::class, 'store'])
             ->name('offices.store');
     });
-
 require __DIR__.'/auth.php';

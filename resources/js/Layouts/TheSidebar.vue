@@ -1,5 +1,14 @@
 <script setup>
+import { usePage } from '@inertiajs/vue3';
 import SidebarLink from '../Components/SidebarLink.vue';
+import { computed } from 'vue';
+
+const page = usePage();
+
+const isAdmin = computed(() => {
+    const user = page.props.auth.user;
+    return user && (user.role === 'office_owner' || user.role === 'admin');
+})
 </script>
 
 <template>
@@ -29,6 +38,19 @@ import SidebarLink from '../Components/SidebarLink.vue';
                 </template>
                 <template #label>Relatórios</template>
             </SidebarLink>
+        </div>
+        <div v-if="isAdmin" class="p-4">
+            <h3 class="px-3 mb-2 text-xs font-semibold uppercase text-gray-500 tracking-wider">
+                Administração
+            </h3>
+            <div>
+                <SidebarLink :href="route('manage.categories.index')" :active="$page.url.startsWith('/manage/categories')">
+                     <template #icon>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check mr-3 h-5 w-5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+                     </template>
+                     <template #label>Gerenciar Categorias</template>
+                </SidebarLink>
+            </div>
         </div>
         <div class="p-4 space-y-2">
             <SidebarLink :href="route('logout')" method="post" :active="$page.url.startsWith('/logout')">

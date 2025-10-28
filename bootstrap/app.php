@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Aliases
         $middleware->alias([
             'admin.role' => \App\Http\Middleware\AdminRole::class,
+            'tenant.admin' => \App\Http\Middleware\CheckTenantAdminRole::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -46,4 +46,9 @@ class Office extends Model
     {
         return $this->hasMany(Content::class);
     }
+
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class);
+    }
 }

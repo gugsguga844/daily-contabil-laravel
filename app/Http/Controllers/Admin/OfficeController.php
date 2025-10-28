@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreOfficeRequest;
 use App\Models\Office;
@@ -47,7 +48,7 @@ class OfficeController extends Controller
             (new CategorySeeder)->run($office->id);
 
             // Create first user for Office (tenant owner by default)
-            $role = $userData['role'] ?? 'office-owner';
+            $role = $userData['role'] ?? UserRole::OFFICE_OWNER->value;
 
             $user = User::create([
                 'name' => $userData['name'],
