@@ -13,7 +13,7 @@ enum UserRole: string
 
     public static function values(): array
     {
-        return array_map(fn(self $r) => $r->value, self::cases());
+        return array_map(fn (self $r) => $r->value, self::cases());
     }
 
     public static function systemRoles(): array

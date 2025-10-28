@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\UserRole;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Enums\UserRole;
 
 class CheckTenantAdminRole
 {
@@ -20,6 +20,7 @@ class CheckTenantAdminRole
         if (! $user || ! in_array($user->role, [UserRole::OFFICE_OWNER, UserRole::ADMIN], true)) {
             abort(403, 'Unauthorized');
         }
+
         return $next($request);
     }
 }

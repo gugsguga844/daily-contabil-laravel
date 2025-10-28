@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreOfficeRequest;
 use App\Models\Office;
@@ -10,7 +11,6 @@ use Database\Seeders\CategorySeeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
-use App\Enums\UserRole;
 
 class OfficeController extends Controller
 {

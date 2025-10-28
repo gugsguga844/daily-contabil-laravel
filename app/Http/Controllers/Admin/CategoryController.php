@@ -49,7 +49,7 @@ class CategoryController extends Controller
         $request->user()->office->categories()->create($validated);
 
         return redirect()->route('manage.categories.index')
-                         ->with('success', 'Categoria criada com sucesso.');
+            ->with('success', 'Categoria criada com sucesso.');
     }
 
     /**
@@ -87,7 +87,7 @@ class CategoryController extends Controller
         $category->update($validated);
 
         return redirect()->route('manage.categories.index')
-                         ->with('success', 'Categoria atualizada com sucesso.');
+            ->with('success', 'Categoria atualizada com sucesso.');
     }
 
     /**
@@ -102,6 +102,6 @@ class CategoryController extends Controller
         $category->delete();
 
         return redirect()->route('manage.categories.index')
-                         ->with('success', 'Categoria excluída com sucesso.');
+            ->with('success', 'Categoria excluída com sucesso.');
     }
 }

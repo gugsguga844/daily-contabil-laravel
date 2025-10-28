@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\UserRole;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Enums\UserRole;
 
 class StoreOfficeRequest extends FormRequest
 {

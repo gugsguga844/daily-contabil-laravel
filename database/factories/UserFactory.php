@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Office;
 use App\Enums\UserRole;
+use App\Models\Office;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -58,6 +58,7 @@ class UserFactory extends Factory
             if (! in_array($role, UserRole::systemRoles(), true)) {
                 $role = UserRole::SUPER_ADMIN->value;
             }
+
             return [
                 'office_id' => null,
                 'role' => $role,

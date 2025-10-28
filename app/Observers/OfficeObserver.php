@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\Models\Office;
-use App\Models\Category;
 
 class OfficeObserver
 {

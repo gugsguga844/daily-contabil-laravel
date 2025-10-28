@@ -3,22 +3,15 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import HeaderTitle from '@/Components/HeaderTitle.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Plus, Calculator, Landmark, UsersRound, UserRoundCog, BookOpen } from 'lucide-vue-next';
+import { Plus } from 'lucide-vue-next';
+import * as Lucide from 'lucide-vue-next';
 
 defineProps({
     categories: Object,
 });
 
-const iconMap = {
-    Calculator,
-    Landmark,
-    UsersRound,
-    UserRoundCog,
-    BookOpen,
-}
-
 function getIconComponent(iconName) {
-    return iconMap[iconName];
+    return Lucide[iconName] || null;
 }
 </script>
 
@@ -36,7 +29,7 @@ function getIconComponent(iconName) {
         </div>
 
         <div v-if="categories.length > 0">
-            <div 
+            <div
                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
             >
                 <Link 
@@ -48,7 +41,13 @@ function getIconComponent(iconName) {
                     <div class="flex flex-col gap-4">
                         <div class="flex justify-between">
                             <div class="flex gap-2">
-                                <component :is="getIconComponent(category.icon_name)" class="w-6 h-6" :style="{ color: category.icon_color }" />
+                                <component
+                                    v-if="getIconComponent(category.icon_name)"
+                                    :is="getIconComponent(category.icon_name)"
+                                    class="w-6 h-6"
+                                    :style="{ color: category.icon_color }"
+                                />
+                                <span v-else class="inline-block w-3 h-3 rounded-full" :style="{ backgroundColor: category.icon_color || '#9ca3af' }" />
                                 <p class="text-text-primary font-semibold">{{ category.name }}</p>
                             </div>
                             <p class="bg-text-primary text-white px-2 py-1 rounded text-xs">{{ category.tutorials_count }} tutoriais</p>

@@ -4,13 +4,14 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import HeaderTitle from '@/Components/HeaderTitle.vue';
 import IconButton from '@/Components/IconButton.vue';
-import IconTextButton from '@/Components/IconTextButton.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Table from '@/Components/Table.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Ellipsis, Pen, Plus, Trash } from 'lucide-vue-next';
 import * as Lucide from 'lucide-vue-next';
 import { ref } from 'vue';
+import { router } from '@inertiajs/vue3';
+import Paginator from '@/Components/Paginator.vue';
 
 defineProps({
     categories: Object,
@@ -33,14 +34,19 @@ function closeModal() {
     isCategoryModalVisible.value = false
     editingCategory.value = null
 }
-    
-
-function onView(id) {
-    console.log('hello')
-}
 
 function onCreate() {
     openCreateModal()
+}
+
+function onDelete(id) {
+    if (!id) return;
+    if (!confirm('Tem certeza que deseja excluir esta categoria? Esta ação não pode ser desfeita.')) {
+        return;
+    }
+    router.delete(route('manage.categories.destroy', id), {
+        preserveScroll: true,
+    });
 }
 </script>
 
@@ -100,14 +106,15 @@ function onCreate() {
                                 <IconButton :icon="Ellipsis" />
                             </template>
                             <template #content>
-                                <DropdownLink as="button" type="button" @click.stop="onEdit(category.id)"><div class="flex items-center gap-2"><Pen class="w-4 h-4"/>Editar</div></DropdownLink>
-                                <DropdownLink as="button" type="button" @click.stop="onDelete(category.id)"><div class="flex items-center gap-2"><Trash class="w-4 h-4"/>Excluir</div></DropdownLink>
+                                <DropdownLink as="button" type="button" @click.stop="openEditModal(category)"><div class="flex items-center gap-2"><Pen class="w-4 h-4"/><span class="mt-1">Editar</span></div></DropdownLink>
+                                <DropdownLink as="button" type="button" @click.stop="onDelete(category.id)"><div class="flex items-center gap-2"><Trash class="w-4 h-4"/><span class="mt-1">Excluir</span></div></DropdownLink>
                             </template>
                         </Dropdown>
                     </td>
                 </tr>
             </template>
         </Table>
+        <Paginator :links="categories.links" />
 
         <CategoryFormModal
             :show="isCategoryModalVisible"
