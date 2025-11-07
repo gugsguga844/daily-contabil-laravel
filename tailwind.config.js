@@ -14,6 +14,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Cerebri Sans', 'sans-serif'],
+                mont: ['Montserrat', 'Cerebri Sans', 'sans-serif'],
             },
             colors: {
                 // Paleta semântica (use estas cores em vez de lembrar códigos/níveis)
