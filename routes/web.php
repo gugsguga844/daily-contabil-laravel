@@ -7,6 +7,9 @@ use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StepCompletionController;
 use App\Http\Controllers\TutorialController;
+use App\Models\Company;
+use App\Models\Content;
+use App\Models\Tutorial;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -21,7 +24,18 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $user = auth()->user();
+    $officeId = $user?->office_id;
+
+    $stats = [
+        'companies' => $officeId ? Company::where('office_id', $officeId)->count() : Company::count(),
+        'tutorials' => $officeId ? Tutorial::where('office_id', $officeId)->count() : Tutorial::count(),
+        'contents'  => $officeId ? Content::where('office_id', $officeId)->count()  : Content::count(),
+    ];
+
+    return Inertia::render('Dashboard', [
+        'stats' => $stats,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/tutorials', function () {
