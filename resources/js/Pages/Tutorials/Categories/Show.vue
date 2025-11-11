@@ -7,6 +7,7 @@ import { Link, router } from '@inertiajs/vue3';
 import { useFormatters } from '@/Composables/useFormatters';
 import SearchInput from '@/Components/SearchInput.vue';
 import IconTextButton from '@/Components/IconTextButton.vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps({
     category: {
@@ -45,6 +46,52 @@ function createTutorial() {
     router.get(route('tutorials.create', { category_id: props.category.id }));
 }
 
+// Filters state
+const search = ref('');
+const showFilters = ref(false);
+const levelSelected = ref([]); // multi-select via checkboxes
+const statusSelected = ref([]);
+
+const levelOptions = [
+    { value: '', label: 'Todos os níveis' },
+    { value: 'beginner', label: 'Iniciante' },
+    { value: 'intermediate', label: 'Intermediário' },
+    { value: 'advanced', label: 'Avançado' },
+];
+
+const statusOptions = [
+    { value: 'published', label: 'Publicado' },
+    { value: 'draft', label: 'Rascunho' },
+];
+
+const filteredTutorials = computed(() => {
+    const term = search.value.trim().toLowerCase();
+    return (props.category.tutorials || [])
+        .filter(t => {
+            const title = String(t.title || '').toLowerCase();
+            const desc = String(t.description || '').toLowerCase();
+            const level = String(t.level || '').toLowerCase();
+            const status = String(t.status || '').toLowerCase();
+
+            const matchesSearch = term === '' || title.includes(term) || desc.includes(term);
+            const matchesLevel = levelSelected.value.length === 0
+                || levelSelected.value.includes('')
+                || levelSelected.value.includes(level);
+            const matchesStatus = statusSelected.value.length === 0 || statusSelected.value.includes(status);
+            return matchesSearch && matchesLevel && matchesStatus;
+        });
+});
+
+function onToggleLevel(val) {
+    // If 'Todos os níveis' (value: '') is selected, clear other selections
+    if (val === '') {
+        levelSelected.value = [''];
+        return;
+    }
+    // If selecting a specific level, make sure 'Todos' is not selected
+    levelSelected.value = levelSelected.value.filter(v => v !== '');
+}
+
 </script>
 
 <template>
@@ -58,14 +105,48 @@ function createTutorial() {
             </div>
         </div>
 
-        <div class="flex gap-4 mt-8 mb-8">
-            <SearchInput placeholder="Buscar tutorial" />
-            <IconTextButton :icon="Funnel">
-                Filtros
-            </IconTextButton>
+        <div class="flex flex-col gap-3 md:flex-row md:items-center md:gap-4 mt-8 mb-8 relative">
+            <div class="flex-1 min-w-0">
+                <SearchInput v-model="search" placeholder="Buscar tutorial" />
+            </div>
+            <div class="flex items-center gap-2">
+                <IconTextButton :icon="Funnel" @click="showFilters = !showFilters">
+                    Filtros
+                </IconTextButton>
+            </div>
+
+            <!-- Filters dropdown -->
+            <div v-if="showFilters" class="absolute right-0 top-full mt-2 w-full md:w-auto z-10">
+                <div class="bg-white border rounded-lg shadow-lg p-4 w-full md:min-w-[420px]">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-semibold text-sm text-text-primary mb-2">Nível</h4>
+                            <div class="space-y-2">
+                                <label v-for="opt in levelOptions" :key="opt.value" class="flex items-center gap-2 text-sm">
+                                    <input type="checkbox" :value="opt.value" v-model="levelSelected" @change="onToggleLevel(opt.value)" class="rounded border-gray-300 text-brand-accent focus:ring-brand-accent" />
+                                    <span>{{ opt.label }}</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-sm text-text-primary mb-2">Status</h4>
+                            <div class="space-y-2">
+                                <label v-for="opt in statusOptions" :key="opt.value" class="flex items-center gap-2 text-sm">
+                                    <input type="checkbox" :value="opt.value" v-model="statusSelected" class="rounded border-gray-300 text-brand-accent focus:ring-brand-accent" />
+                                    <span>{{ opt.label }}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-2 mt-4">
+                        <button type="button" class="text-sm text-text-secondary" @click="levelSelected = []; statusSelected = []">Limpar</button>
+                        <button type="button" class="text-sm text-white bg-brand-accent px-3 py-1.5 rounded" @click="showFilters = false">Aplicar</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div v-if="category.tutorials.length === 0">
+        <div v-if="(category.tutorials || []).length === 0">
             <p class="text-text-secondary">Nenhum tutorial cadastrado</p>
         </div>
         <div v-else>
@@ -73,7 +154,7 @@ function createTutorial() {
                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
             >
                 <Link
-                    v-for="tutorial in category.tutorials"
+                    v-for="tutorial in filteredTutorials"
                     :key="tutorial.id"
                     :href="route('tutorials.show', tutorial.id)"
                     class="border shadow-sm bg-white border-opacity-50 rounded p-4"
