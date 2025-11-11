@@ -30,7 +30,7 @@ Route::get('/dashboard', function () {
     $stats = [
         'companies' => $officeId ? Company::where('office_id', $officeId)->count() : Company::count(),
         'tutorials' => $officeId ? Tutorial::where('office_id', $officeId)->count() : Tutorial::count(),
-        'contents'  => $officeId ? Content::where('office_id', $officeId)->count()  : Content::count(),
+        'contents' => $officeId ? Content::where('office_id', $officeId)->count() : Content::count(),
     ];
 
     return Inertia::render('Dashboard', [
