@@ -89,6 +89,8 @@ Route::prefix('manage')
     ->name('manage.')
     ->group(function () {
         Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+
+        Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
     });
 
 // Admin UI routes (system roles only)
