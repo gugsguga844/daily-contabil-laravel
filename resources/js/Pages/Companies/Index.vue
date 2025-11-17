@@ -23,6 +23,13 @@ function onView(id) {
     router.visit(route('companies.show', id));
 }
 
+function onDelete(id) {
+    if (!confirm('Tem certeza que deseja excluir esta empresa? Esta ação não pode ser desfeita.')) {
+        return;
+    }
+    router.delete(route('companies.destroy', id));
+}
+
 function onCreate() {
     router.get(route('companies.create'));
 }
@@ -163,8 +170,8 @@ const filteredCompanies = computed(() => {
                                 <IconButton :icon="Ellipsis" />
                             </template>
                             <template #content>
-                                <DropdownLink as="button" type="button" @click.stop="onView(company.id)">Ver</DropdownLink>
-                                <DropdownLink as="button" type="button" @click.stop="onView(company.id)">VerTemporariamente</DropdownLink>
+                                <DropdownLink as="button" type="button" @click.stop="onView(company.id)">Editar</DropdownLink>
+                                <DropdownLink as="button" type="button" class="text-red-600" @click.stop="onDelete(company.id)">Excluir</DropdownLink>
                             </template>
                         </Dropdown>
                     </td>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Content;
 use App\Models\Tutorial;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -150,8 +151,14 @@ class TutorialController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Tutorial $tutorial): RedirectResponse
     {
-        //
+        if ($tutorial->office_id !== auth()->user()->office_id) {
+            abort(403);
+        }
+
+        $tutorial->delete();
+
+        return back()->with('success', 'Tutorial excluído com sucesso!');
     }
 }
