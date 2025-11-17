@@ -2,7 +2,7 @@
 import HeaderTitle from '@/Components/HeaderTitle.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Download, Funnel, Play, Plus } from 'lucide-vue-next';
+import { Download, Funnel, Play, Plus, Pencil, Trash } from 'lucide-vue-next';
 import { Link, router } from '@inertiajs/vue3';
 import { useFormatters } from '@/Composables/useFormatters';
 import SearchInput from '@/Components/SearchInput.vue';
@@ -44,6 +44,18 @@ const { formatDate } = useFormatters();
 
 function createTutorial() {
     router.get(route('tutorials.create', { category_id: props.category.id }));
+}
+
+function onEdit(tutorialId) {
+    // For now, navigate to show (edit page not implemented yet)
+    router.visit(route('tutorials.show', tutorialId));
+}
+
+function onDelete(tutorialId) {
+    if (!confirm('Tem certeza que deseja excluir este tutorial? Esta ação não pode ser desfeita.')) {
+        return;
+    }
+    router.delete(route('tutorials.destroy', tutorialId));
 }
 
 // Filters state
@@ -165,7 +177,7 @@ function onToggleLevel(val) {
                                 <p class="text-text-primary font-semibold truncate break-words">{{ tutorial.title }}</p>
                                 <p class="text-text-secondary line-clamp-2 break-words">{{ tutorial.description }}</p>
                             </div>
-                            <p class="text-text-primary px-2 py-1 flex items-center gap-2 rounded text-xs my-1"><Play class="w-6 h-6" /> </p>
+                            <p class="text-text-primary px-2 py-1 flex items-center gap-2 rounded text-xs my-1"><Play class="w-6 h-6" /></p>
                         </div>
                         <div class="flex flex-col gap-2">
                             <div class="flex justify-between gap-2">
@@ -174,7 +186,15 @@ function onToggleLevel(val) {
                             </div>
                             <div class="flex gap-2 items-center justify-between">
                                 <span :class="`px-2 py-0.5 rounded text-xs ${levelClasses(tutorial.level)}`">{{ levelLabel(tutorial.level) }}</span>
-                                <Download class="w-5 h-5 text-text-secondary" />
+                                <div class="flex items-center gap-3">
+                                    <button type="button" class="text-text-secondary hover:text-text-primary" @click.prevent.stop="onEdit(tutorial.id)">
+                                        <Pencil class="w-5 h-5" />
+                                    </button>
+                                    <button type="button" class="text-red-600 hover:text-red-700" @click.prevent.stop="onDelete(tutorial.id)">
+                                        <Trash class="w-5 h-5" />
+                                    </button>
+                                    <Download class="w-5 h-5 text-text-secondary" />
+                                </div>
                             </div>
                         </div>
                     </div>

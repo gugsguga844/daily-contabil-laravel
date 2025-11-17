@@ -59,6 +59,10 @@ Route::get('/companies/{company_id}', [CompanyController::class, 'show'])
     ->middleware(['auth', 'verified'])
     ->name('companies.show');
 
+Route::delete('/companies/{company}', [CompanyController::class, 'destroy'])
+    ->middleware(['auth', 'verified'])
+    ->name('companies.destroy');
+
 Route::post('/contents', [ContentController::class, 'store'])->name('contents.store');
 Route::delete('/contents/{content}', [ContentController::class, 'destroy'])->name('contents.destroy');
 

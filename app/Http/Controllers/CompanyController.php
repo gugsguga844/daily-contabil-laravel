@@ -115,4 +115,17 @@ class CompanyController extends Controller
 
         return redirect()->route('companies.index')->with('success', 'Empresa criada com sucesso.');
     }
+
+    public function destroy(Company $company): RedirectResponse
+    {
+        $user = request()->user();
+
+        if ($company->office_id !== optional($user)->office_id) {
+            abort(403);
+        }
+
+        $company->delete();
+
+        return redirect()->route('companies.index')->with('success', 'Empresa excluída com sucesso.');
+    }
 }
