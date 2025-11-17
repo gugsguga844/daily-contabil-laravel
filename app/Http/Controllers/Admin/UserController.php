@@ -25,7 +25,7 @@ class UserController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'role_value' => $user->role->value,
-                'role_label' => Str::title(str_replace('_', ' ', $user->role->value))
+                'role_label' => Str::title(str_replace('_', ' ', $user->role->value)),
             ]);
 
         return Inertia::render('Admin/Users/Index', [
