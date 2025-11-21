@@ -15,8 +15,9 @@ class CompanyController extends Controller
     public function index()
     {
         $user = request()->user();
+        $office = $user->office;
 
-        $companies = $user->office
+        $companies = $office
             ->companies()
             ->with('accountant')
             ->latest()
@@ -33,8 +34,18 @@ class CompanyController extends Controller
                 ];
             });
 
+        // Metrics for cards (use same scope as listing)
+        $total = (int) $companies->total();
+        $active = (int) $office->companies()->where('is_active', true)->count();
+        $inactive = max(0, $total - $active);
+
         return Inertia::render('Companies/Index', [
             'companies' => $companies,
+            'metrics' => [
+                'total' => $total,
+                'active' => $active,
+                'inactive' => $inactive,
+            ],
         ]);
     }
 

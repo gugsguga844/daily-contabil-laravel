@@ -8,6 +8,7 @@ import { useFormatters } from '@/Composables/useFormatters';
 import SearchInput from '@/Components/SearchInput.vue';
 import IconTextButton from '@/Components/IconTextButton.vue';
 import { computed, ref } from 'vue';
+import ConfirmModal from '@/Components/ConfirmModal.vue';
 
 const props = defineProps({
     category: {
@@ -51,11 +52,26 @@ function onEdit(tutorialId) {
     router.visit(route('tutorials.show', tutorialId));
 }
 
-function onDelete(tutorialId) {
-    if (!confirm('Tem certeza que deseja excluir este tutorial? Esta ação não pode ser desfeita.')) {
-        return;
-    }
-    router.delete(route('tutorials.destroy', tutorialId));
+// Modal de confirmação para excluir tutorial
+const showDeleteModal = ref(false);
+const deletingId = ref(null);
+const deletingLoading = ref(false);
+
+function requestDelete(tutorialId) {
+    deletingId.value = tutorialId;
+    showDeleteModal.value = true;
+}
+
+function confirmDelete() {
+    if (!deletingId.value) return;
+    deletingLoading.value = true;
+    router.delete(route('tutorials.destroy', deletingId.value), {
+        onFinish: () => {
+            deletingLoading.value = false;
+            showDeleteModal.value = false;
+            deletingId.value = null;
+        },
+    });
 }
 
 // Filters state
@@ -190,7 +206,7 @@ function onToggleLevel(val) {
                                     <button type="button" class="text-text-secondary hover:text-text-primary" @click.prevent.stop="onEdit(tutorial.id)">
                                         <Pencil class="w-5 h-5" />
                                     </button>
-                                    <button type="button" class="text-red-600 hover:text-red-700" @click.prevent.stop="onDelete(tutorial.id)">
+                                    <button type="button" class="text-red-600 hover:text-red-700" @click.prevent.stop="requestDelete(tutorial.id)">
                                         <Trash class="w-5 h-5" />
                                     </button>
                                     <Download class="w-5 h-5 text-text-secondary" />
@@ -201,6 +217,18 @@ function onToggleLevel(val) {
                 </Link>
             </div>
         </div>
+
+        <!-- Modal de confirmação reutilizável -->
+        <ConfirmModal
+            v-model:open="showDeleteModal"
+            :danger="true"
+            title="Excluir tutorial"
+            message="Tem certeza que deseja excluir este tutorial? Esta ação não pode ser desfeita."
+            confirmLabel="Excluir"
+            cancelLabel="Cancelar"
+            :loading="deletingLoading"
+            @confirm="confirmDelete"
+        />
     </AuthenticatedLayout>
 </template>
 

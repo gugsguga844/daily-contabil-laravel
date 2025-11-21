@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, useAttrs } from 'vue';
 
 const model = defineModel({
     type: String,
@@ -7,6 +7,14 @@ const model = defineModel({
 });
 
 const input = ref(null);
+const attrs = useAttrs();
+
+const props = defineProps({
+    invalid: {
+        type: Boolean,
+        default: false,
+    },
+});
 
 onMounted(() => {
     if (input.value.hasAttribute('autofocus')) {
@@ -19,8 +27,13 @@ defineExpose({ focus: () => input.value.focus() });
 
 <template>
     <input
-        class="rounded-md border-base-200 shadow-sm focus:border-primary focus:ring-primary"
+        :class="[
+            'rounded-md border border-base-200 shadow-sm focus:border-primary focus:ring-primary placeholder:text-base-400',
+            invalid && 'border-state-danger focus:border-state-danger focus:ring-state-danger ring-1 ring-state-danger/20'
+        ]"
+        :aria-invalid="invalid ? 'true' : 'false'"
         v-model="model"
         ref="input"
+        v-bind="attrs"
     />
 </template>

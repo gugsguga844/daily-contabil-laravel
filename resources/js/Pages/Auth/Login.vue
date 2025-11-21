@@ -8,6 +8,7 @@ import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import IconTopics from '@/Components/IconTopics.vue';
 import { BookOpen, CalendarCog, Users } from 'lucide-vue-next';
+import { ref, computed } from 'vue';
 
 defineProps({
     canResetPassword: {
@@ -24,11 +25,71 @@ const form = useForm({
     remember: false,
 });
 
+// Local client-side validation errors (Portuguese)
+const localErrors = ref({ email: '', password: '' });
+
+const emailRegex = /^(?:[a-zA-Z0-9_'^&\/+-])+(?:\.(?:[a-zA-Z0-9_'^&\/+-])+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+
+function validateField(field) {
+    if (field === 'email') {
+        const value = (form.email || '').trim();
+        if (!value) {
+            localErrors.value.email = 'Informe seu e-mail.';
+        } else if (!emailRegex.test(value)) {
+            localErrors.value.email = 'Informe um e-mail válido.';
+        } else {
+            localErrors.value.email = '';
+        }
+    }
+    if (field === 'password') {
+        const value = form.password || '';
+        if (!value) {
+            localErrors.value.password = 'Informe sua senha.';
+        } else {
+            localErrors.value.password = '';
+        }
+    }
+}
+
+function validateForm() {
+    validateField('email');
+    validateField('password');
+    return !localErrors.value.email && !localErrors.value.password;
+}
+
+// Translate common server auth errors to PT-BR
+function translateServerErrors(errors) {
+    // Breeze typically returns credential mismatch on email field
+    if (errors?.email) {
+        const msg = Array.isArray(errors.email) ? errors.email[0] : errors.email;
+        if (typeof msg === 'string' && msg.toLowerCase().includes('credentials')) {
+            form.setError('email', 'E-mail ou senha inválidos.');
+        }
+    }
+}
+
 const submit = () => {
+    // prevent native browser required popups and validate ourselves
+    if (!validateForm()) {
+        return;
+    }
+
+    // Clear previous server errors when trying again
+    form.clearErrors();
+
     form.post(route('login'), {
+        onError: (errors) => {
+            // Keep our local client-side messages if any
+            translateServerErrors(errors);
+        },
         onFinish: () => form.reset('password'),
     });
 };
+
+// Global error state for the form
+const hasAnyError = computed(() => {
+    return Boolean(localErrors.value.email || localErrors.value.password || form.errors.email || form.errors.password);
+});
 </script>
 
 <template>
@@ -86,7 +147,11 @@ const submit = () => {
                     {{ status }}
                 </div>
 
-                <form @submit.prevent="submit" class="mt-6 space-y-5">
+                <form @submit.prevent="submit" novalidate class="mt-6 space-y-5">
+                    <!-- Global form error notice -->
+                    <div v-if="hasAnyError" class="rounded-md border border-state-danger/30 bg-red-50 px-3 py-2 text-sm text-state-danger">
+                        Corrija os campos destacados abaixo.
+                    </div>
                     <div>
                         <InputLabel for="email" value="Email" class="text-base-700" />
 
@@ -95,12 +160,16 @@ const submit = () => {
                             type="email"
                             class="mt-1 block w-full"
                             v-model="form.email"
-                            required
+                            @blur="validateField('email')"
+                            :invalid="Boolean(localErrors.email || form.errors.email)"
                             autofocus
                             autocomplete="username"
+                            :aria-describedby="(localErrors.email || form.errors.email) ? 'email-error' : undefined"
                         />
 
-                        <InputError class="mt-2" :message="form.errors.email" />
+                        <div id="email-error">
+                            <InputError class="mt-2" :message="localErrors.email || form.errors.email" />
+                        </div>
                     </div>
 
                     <div>
@@ -111,11 +180,15 @@ const submit = () => {
                             type="password"
                             class="mt-1 block w-full"
                             v-model="form.password"
-                            required
+                            @blur="validateField('password')"
+                            :invalid="Boolean(localErrors.password || form.errors.password)"
                             autocomplete="current-password"
+                            :aria-describedby="(localErrors.password || form.errors.password) ? 'password-error' : undefined"
                         />
 
-                        <InputError class="mt-2" :message="form.errors.password" />
+                        <div id="password-error">
+                            <InputError class="mt-2" :message="localErrors.password || form.errors.password" />
+                        </div>
                     </div>
 
                     <div class="flex items-center justify-between">
