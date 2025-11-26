@@ -14,20 +14,51 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import { computed, ref } from 'vue';
+import ConfirmModal from '@/Components/ConfirmModal.vue';
 
 const props = defineProps({
     companies: Object,
+    metrics: {
+        type: Object,
+        default: () => ({ total: 0, active: 0, inactive: 0 }),
+    }
+});
+
+// Fallback metrics from paginator in case server metrics are missing or zeroed
+const displayedMetrics = computed(() => {
+    const srv = props.metrics || {};
+    const metaTotal = props.companies?.meta?.total;
+    const data = props.companies?.data || [];
+    const total = (srv.total && srv.total > 0) ? srv.total : (typeof metaTotal === 'number' ? metaTotal : data.length);
+    const active = (srv.active && srv.active >= 0) ? srv.active : data.filter(c => !!c.is_active).length;
+    const inactive = (srv.inactive && srv.inactive >= 0) ? srv.inactive : Math.max(0, total - active);
+    return { total, active, inactive };
 });
 
 function onView(id) {
     router.visit(route('companies.show', id));
 }
 
-function onDelete(id) {
-    if (!confirm('Tem certeza que deseja excluir esta empresa? Esta ação não pode ser desfeita.')) {
-        return;
-    }
-    router.delete(route('companies.destroy', id));
+// Modal de confirmação de exclusão
+const showDeleteModal = ref(false);
+const deletingId = ref(null);
+const deletingLoading = ref(false);
+
+function requestDelete(id) {
+    deletingId.value = id;
+    showDeleteModal.value = true;
+}
+
+function confirmDelete() {
+    if (!deletingId.value) return;
+    deletingLoading.value = true;
+    router.delete(route('companies.destroy', deletingId.value), {
+        onFinish: () => {
+            deletingLoading.value = false;
+            showDeleteModal.value = false;
+            deletingId.value = null;
+        },
+    });
 }
 
 function onCreate() {
@@ -85,9 +116,9 @@ const filteredCompanies = computed(() => {
             </div>
         </div>
         <div class="flex gap-4">
-            <SimpleIconCard title="Total de empresas" subtitle="10" :icon="Building2" />
-            <SimpleIconCard title="Empresas ativas" subtitle="10" :icon="UserRoundCheck" />
-            <SimpleIconCard title="Empresas inativas" subtitle="10" :icon="UserRoundX" />
+            <SimpleIconCard title="Total de empresas" :subtitle="String(displayedMetrics.total)" :icon="Building2" />
+            <SimpleIconCard title="Empresas ativas" :subtitle="String(displayedMetrics.active)" :icon="UserRoundCheck" />
+            <SimpleIconCard title="Empresas inativas" :subtitle="String(displayedMetrics.inactive)" :icon="UserRoundX" />
         </div>
 
         <div class="flex gap-4 mt-8 mb-8 relative">
@@ -171,7 +202,7 @@ const filteredCompanies = computed(() => {
                             </template>
                             <template #content>
                                 <DropdownLink as="button" type="button" @click.stop="onView(company.id)">Editar</DropdownLink>
-                                <DropdownLink as="button" type="button" class="text-red-600" @click.stop="onDelete(company.id)">Excluir</DropdownLink>
+                                <DropdownLink as="button" type="button" class="text-red-600" @click.stop="requestDelete(company.id)">Excluir</DropdownLink>
                             </template>
                         </Dropdown>
                     </td>
@@ -179,5 +210,17 @@ const filteredCompanies = computed(() => {
             </template>
         </Table>
         <Paginator :links="companies.links" />
+
+        <!-- Modal de confirmação reutilizável -->
+        <ConfirmModal
+            v-model:open="showDeleteModal"
+            :danger="true"
+            title="Excluir empresa"
+            message="Tem certeza que deseja excluir esta empresa? Esta ação não pode ser desfeita."
+            confirmLabel="Excluir"
+            cancelLabel="Cancelar"
+            :loading="deletingLoading"
+            @confirm="confirmDelete"
+        />
     </AuthenticatedLayout>
 </template>

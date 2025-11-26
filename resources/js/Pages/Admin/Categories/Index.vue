@@ -12,6 +12,7 @@ import * as Lucide from 'lucide-vue-next';
 import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import Paginator from '@/Components/Paginator.vue';
+import ConfirmModal from '@/Components/ConfirmModal.vue';
 
 defineProps({
     categories: Object,
@@ -39,13 +40,27 @@ function onCreate() {
     openCreateModal()
 }
 
-function onDelete(id) {
+// Modal de confirmação de exclusão
+const showDeleteModal = ref(false);
+const deletingId = ref(null);
+const deletingLoading = ref(false);
+
+function requestDelete(id) {
     if (!id) return;
-    if (!confirm('Tem certeza que deseja excluir esta categoria? Esta ação não pode ser desfeita.')) {
-        return;
-    }
-    router.delete(route('manage.categories.destroy', id), {
+    deletingId.value = id;
+    showDeleteModal.value = true;
+}
+
+function confirmDelete() {
+    if (!deletingId.value) return;
+    deletingLoading.value = true;
+    router.delete(route('manage.categories.destroy', deletingId.value), {
         preserveScroll: true,
+        onFinish: () => {
+            deletingLoading.value = false;
+            showDeleteModal.value = false;
+            deletingId.value = null;
+        },
     });
 }
 </script>
@@ -107,7 +122,7 @@ function onDelete(id) {
                             </template>
                             <template #content>
                                 <DropdownLink as="button" type="button" @click.stop="openEditModal(category)"><div class="flex items-center gap-2"><Pen class="w-4 h-4"/><span class="mt-1">Editar</span></div></DropdownLink>
-                                <DropdownLink as="button" type="button" @click.stop="onDelete(category.id)"><div class="flex items-center gap-2"><Trash class="w-4 h-4"/><span class="mt-1">Excluir</span></div></DropdownLink>
+                                <DropdownLink as="button" type="button" @click.stop="requestDelete(category.id)"><div class="flex items-center gap-2"><Trash class="w-4 h-4"/><span class="mt-1">Excluir</span></div></DropdownLink>
                             </template>
                         </Dropdown>
                     </td>
@@ -120,6 +135,18 @@ function onDelete(id) {
             :show="isCategoryModalVisible"
             :category="editingCategory"
             @close="closeModal"
+        />
+
+        <!-- Modal de confirmação reutilizável -->
+        <ConfirmModal
+            v-model:open="showDeleteModal"
+            :danger="true"
+            title="Excluir categoria"
+            message="Tem certeza que deseja excluir esta categoria? Esta ação não pode ser desfeita."
+            confirmLabel="Excluir"
+            cancelLabel="Cancelar"
+            :loading="deletingLoading"
+            @confirm="confirmDelete"
         />
     </AuthenticatedLayout>
 </template>

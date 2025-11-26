@@ -2,8 +2,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import HeaderTitle from '@/Components/HeaderTitle.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Plus } from 'lucide-vue-next';
 import * as Lucide from 'lucide-vue-next';
 
 defineProps({
@@ -21,11 +19,6 @@ function getIconComponent(iconName) {
     <AuthenticatedLayout>
         <div class="flex gap-4 mb-8 justify-between">
             <HeaderTitle title="Tutoriais" subtitle="Base de conhecimentos e tutoriais" />
-            <div class="flex gap-4 py-2">
-                <PrimaryButton :icon="Plus" @click="onCreate">
-                    <span class="mt-1">Nova Categoria</span>
-                </PrimaryButton>
-            </div>
         </div>
 
         <div v-if="categories.length > 0">
