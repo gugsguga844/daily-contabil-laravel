@@ -95,6 +95,14 @@ Route::prefix('manage')
         Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
 
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+
+        // Library management (tenant admins only)
+        Route::get('library', [\App\Http\Controllers\Admin\LibraryController::class, 'index'])
+            ->name('library.index');
+
+        // Tutorials management (tenant admins only)
+        Route::get('tutorials', [\App\Http\Controllers\Admin\TutorialManageController::class, 'index'])
+            ->name('tutorials.index');
     });
 
 // Admin UI routes (system roles only)

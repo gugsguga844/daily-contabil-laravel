@@ -11,13 +11,15 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import IconButton from '@/Components/IconButton.vue';
 import { computed, ref } from 'vue';
+import UserFormModal from '@/Components/UserFormModal.vue';
 
 const props = defineProps({
     users: Object,
+    roles: Array,
 });
 
 function onCreate() {
-    router.get(route('manage.users.create'));
+    showCreateModal.value = true;
 }
 
 const search = ref('');
@@ -26,7 +28,7 @@ const rolesSelected = ref([]); // ['admin', 'user', 'office_owner']
 
 const rolesOptions = [
     { value: 'admin', label: 'Admin' },
-    { value: 'user', label: 'Usuário' },
+    { value: 'worker', label: 'Usuário' },
     { value: 'office_owner', label: 'Proprietário' },
 ];
 
@@ -44,6 +46,11 @@ const filteredUsers = computed(() => {
     });
 });
 
+// Modal state
+const showCreateModal = ref(false);
+function onUserCreated() {
+    router.reload({ only: ['users'] });
+}
 </script>
 
 <template>
@@ -111,7 +118,7 @@ const filteredUsers = computed(() => {
                     <td class="p-4 align-middle whitespace-nowrap text-sm">{{ user.email }}</td>
                     <td class="p-4 align-middle whitespace-nowrap text-sm">
                         <span v-if="user.role_value === 'admin'" :class="user.role_value === 'admin' ? 'bg-[#E8F5E9] text-[#166534] font-semibold px-2 py-1 rounded' : 'text-red-500'">{{ user.role_label }}</span>
-                        <span v-else-if="user.role_value === 'user'" :class="user.role_value === 'user' ? 'bg-[#FFF4E5] text-[#B45309] font-semibold px-2 py-1 rounded' : 'text-red-500'">{{ user.role_label }}</span>
+                        <span v-else-if="user.role_value === 'worker'" :class="user.role_value === 'worker' ? 'bg-[#FFF4E5] text-[#B45309] font-semibold px-2 py-1 rounded' : 'text-red-500'">{{ user.role_label }}</span>
                         <span v-else-if="user.role_value === 'office_owner'" :class="user.role_value === 'office_owner' ? 'bg-[#E6F0FF] text-[#1D4ED8] font-semibold px-2 py-1 rounded' : 'text-red-500'">{{ user.role_label }}</span>
                     </td>
                     <td class="p-4 align-middle whitespace-nowrap text-sm" @click.stop>
@@ -128,5 +135,7 @@ const filteredUsers = computed(() => {
                 </tr>
             </template>
         </Table>
+
+        <UserFormModal :show="showCreateModal" :roles="roles" @close="showCreateModal = false" @created="onUserCreated" />
     </AuthenticatedLayout>
 </template>

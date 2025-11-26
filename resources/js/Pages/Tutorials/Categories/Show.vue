@@ -126,11 +126,6 @@ function onToggleLevel(val) {
     <AuthenticatedLayout>
         <div class="flex gap-4 mb-8 justify-between">
             <HeaderTitle :title="category.name" :subtitle="category.description" />
-            <div class="flex gap-4 py-2">
-                <PrimaryButton :icon="Plus" @click="createTutorial">
-                    <span class="mt-1">Novo Tutorial</span>
-                </PrimaryButton>
-            </div>
         </div>
 
         <div class="flex flex-col gap-3 md:flex-row md:items-center md:gap-4 mt-8 mb-8 relative">

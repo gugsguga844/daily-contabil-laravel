@@ -21,11 +21,6 @@ function getIconComponent(iconName) {
     <AuthenticatedLayout>
         <div class="flex gap-4 mb-8 justify-between">
             <HeaderTitle title="Tutoriais" subtitle="Base de conhecimentos e tutoriais" />
-            <div class="flex gap-4 py-2">
-                <PrimaryButton :icon="Plus" @click="onCreate">
-                    <span class="mt-1">Nova Categoria</span>
-                </PrimaryButton>
-            </div>
         </div>
 
         <div v-if="categories.length > 0">

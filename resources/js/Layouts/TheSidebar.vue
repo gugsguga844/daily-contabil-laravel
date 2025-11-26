@@ -32,18 +32,24 @@ const isAdmin = computed(() => {
                 </template>
                 <template #label>Empresas</template>
             </SidebarLink>
-            <SidebarLink :href="route('dashboard')" :active="$page.url.startsWith('/reports')">
-                <template #icon>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart3 mr-3 h-5 w-5"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
-                </template>
-                <template #label>Relatórios</template>
-            </SidebarLink>
         </div>
         <div v-if="isAdmin" class="p-4">
             <h3 class="px-3 mb-2 text-xs font-semibold uppercase text-gray-500 tracking-wider">
                 Administração
             </h3>
             <div>
+                <SidebarLink :href="route('manage.library.index')" :active="$page.url.startsWith('/manage/library')">
+                     <template #icon>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder mr-3 h-5 w-5"><path d="M3 7a2 2 0 0 1 2-2h3l2 2h9a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
+                     </template>
+                     <template #label>Biblioteca</template>
+                </SidebarLink>
+                <SidebarLink :href="route('manage.tutorials.index')" :active="$page.url.startsWith('/manage/tutorials')">
+                     <template #icon>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open mr-3 h-5 w-5"><path d="M12 7v14"/><path d="M16.5 21H12a4 4 0 0 1-4-4V7a3 3 0 0 0-3 3v11a2 2 0 0 0 2 2h6"/><path d="M7.5 21H12a4 4 0 0 0 4-4V7a3 3 0 0 1 3 3v11a2 2 0 0 1-2 2h-6"/></svg>
+                     </template>
+                     <template #label>Gerenciar Tutoriais</template>
+                </SidebarLink>
                 <SidebarLink :href="route('manage.categories.index')" :active="$page.url.startsWith('/manage/categories')">
                      <template #icon>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check mr-3 h-5 w-5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
@@ -52,7 +58,7 @@ const isAdmin = computed(() => {
                 </SidebarLink>
                 <SidebarLink :href="route('manage.users.index')" :active="$page.url.startsWith('/manage/users')">
                      <template #icon>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user mr-3 h-5 w-5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user mr-3 h-5 w-5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                      </template>
                      <template #label>Gerenciar Usuários</template>
                 </SidebarLink>
