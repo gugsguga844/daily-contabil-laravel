@@ -2,7 +2,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import HeaderTitle from '@/Components/HeaderTitle.vue';
 import SearchInput from '@/Components/SearchInput.vue';
-import IconTextButton from '@/Components/IconTextButton.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -11,7 +10,7 @@ import ConfirmModal from '@/Components/ConfirmModal.vue';
 import Paginator from '@/Components/Paginator.vue';
 import ContentTypeIcon from '@/Components/ContentTypeIcon.vue';
 import { useFormatters } from '@/Composables/useFormatters';
-import { Grid2x2, List, Upload, Ellipsis, Trash } from 'lucide-vue-next';
+import { Grid2x2, List, Upload, Ellipsis } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
 

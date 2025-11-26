@@ -9,7 +9,7 @@ const model = defineModel({
 const input = ref(null);
 const attrs = useAttrs();
 
-const props = defineProps({
+defineProps({
     invalid: {
         type: Boolean,
         default: false,

@@ -75,7 +75,7 @@ async function tryFetchAddressByCep() {
         if (data.uf && !form.state) form.state = data.uf;
         // Clear zip error if previously set
         if (localErrors.value.zip_code === 'CEP não encontrado.') localErrors.value.zip_code = '';
-    } catch (e) {
+    } catch {
         // Network or parsing error
         localErrors.value.zip_code = 'Não foi possível consultar o CEP agora.';
     } finally {
@@ -115,7 +115,7 @@ const localErrors = ref({
     accountant_id: '',
 });
 
-const emailRegex = /^(?:[a-zA-Z0-9_'^&\/+-])+(?:\.(?:[a-zA-Z0-9_'^&\/+-])+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+const emailRegex = /^(?:[a-zA-Z0-9_'^&/+ -])+(?:\.(?:[a-zA-Z0-9_'^&/+ -])+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
 
 function validateField(field) {
     switch (field) {

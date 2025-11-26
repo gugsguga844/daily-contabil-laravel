@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onBeforeUnmount, watch, computed } from 'vue';
+import { onMounted, onBeforeUnmount, computed } from 'vue';
 
 // v-model support for `open`
 const open = defineModel('open', { type: Boolean, default: false });

@@ -9,7 +9,7 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import IconButton from '@/Components/IconButton.vue';
 import ConfirmModal from '@/Components/ConfirmModal.vue';
 import Paginator from '@/Components/Paginator.vue';
-import { Plus, Funnel, Ellipsis, Trash, BookOpen, CheckCheck, FilePenLine } from 'lucide-vue-next';
+import { Plus, Funnel, Ellipsis, BookOpen, CheckCheck, FilePenLine } from 'lucide-vue-next';
 import { Head, router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { useFormatters } from '@/Composables/useFormatters';

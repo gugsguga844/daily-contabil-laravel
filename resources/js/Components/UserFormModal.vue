@@ -23,7 +23,7 @@ const form = useForm({
 });
 
 const localErrors = ref({ name:'', email:'', role:'', password:'', password_confirmation:'' });
-const emailRegex = /^(?:[a-zA-Z0-9_'^&\/+-])+(?:\.(?:[a-zA-Z0-9_'^&\/+-])+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+const emailRegex = /^(?:[a-zA-Z0-9_'^&/+ -])+(?:\.(?:[a-zA-Z0-9_'^&/+ -])+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
 
 function resetForm() {
   form.reset();

@@ -4,8 +4,6 @@ import HeaderTitle from '@/Components/HeaderTitle.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import FormSelect from '@/Components/FormSelect.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
 import InputError from '@/Components/InputError.vue';
 import IconTextButton from '@/Components/IconTextButton.vue';
 import { Save, X } from 'lucide-vue-next';
@@ -28,7 +26,7 @@ const localErrors = ref({
   name: '', email: '', role: '', password: '', password_confirmation: ''
 });
 
-const emailRegex = /^(?:[a-zA-Z0-9_'^&\/+-])+(?:\.(?:[a-zA-Z0-9_'^&\/+-])+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+const emailRegex = /^(?:[a-zA-Z0-9_'^&/+ -])+(?:\.(?:[a-zA-Z0-9_'^&/+ -])+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
 
 function validateField(field) {
   switch (field) {

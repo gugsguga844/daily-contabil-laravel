@@ -35,7 +35,7 @@ class LibraryController extends Controller
 
         $allForMetrics = Content::query()
             ->when($officeId, fn ($q) => $q->where('office_id', $officeId))
-            ->select(['id','type','size_bytes'])
+            ->select(['id', 'type', 'size_bytes'])
             ->get();
 
         $metrics = [

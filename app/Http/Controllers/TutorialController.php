@@ -138,7 +138,9 @@ class TutorialController extends Controller
     public function edit(string $id)
     {
         $tutorial = Tutorial::with([
-            'steps' => function ($q) { $q->orderBy('order'); },
+            'steps' => function ($q) {
+                $q->orderBy('order');
+            },
             'supportingMaterials',
         ])->findOrFail($id);
 
@@ -149,7 +151,7 @@ class TutorialController extends Controller
         $categories = Category::where('office_id', auth()->user()->office_id)
             ->orderBy('name')
             ->get(['id', 'name'])
-            ->map(fn ($c) => [ 'value' => $c->id, 'label' => $c->name ]);
+            ->map(fn ($c) => ['value' => $c->id, 'label' => $c->name]);
 
         $libraryContents = Content::where('office_id', auth()->user()->office_id)
             ->with('uploader')
@@ -170,7 +172,7 @@ class TutorialController extends Controller
                 'title' => $s->title,
                 'description' => $s->description,
                 'content_id' => $s->content_id,
-                'content' => $s->content?->only(['id','title','type']),
+                'content' => $s->content?->only(['id', 'title', 'type']),
             ])->values(),
             'supporting_material_ids' => $tutorial->supportingMaterials->pluck('id'),
         ];

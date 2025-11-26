@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Tutorial;
 use App\Models\Category;
+use App\Models\Tutorial;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -26,7 +26,7 @@ class TutorialManageController extends Controller
                 'description' => $t->description,
                 'status' => $t->status,
                 'level' => $t->level,
-                'category' => $t->category?->only(['id','name']),
+                'category' => $t->category?->only(['id', 'name']),
                 'created_at' => $t->created_at,
             ];
         });
@@ -34,7 +34,7 @@ class TutorialManageController extends Controller
         $categories = Category::query()
             ->when($officeId, fn ($q) => $q->where('office_id', $officeId))
             ->orderBy('name')
-            ->get(['id','name'])
+            ->get(['id', 'name'])
             ->map(fn ($c) => ['value' => $c->id, 'label' => $c->name]);
 
         $metrics = [

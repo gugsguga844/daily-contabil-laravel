@@ -1,8 +1,7 @@
 <script setup>
 import HeaderTitle from '@/Components/HeaderTitle.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Download, Funnel, Play, Plus, Pencil, Trash } from 'lucide-vue-next';
+import { Download, Funnel, Play, Pencil, Trash } from 'lucide-vue-next';
 import { Link, router } from '@inertiajs/vue3';
 import { useFormatters } from '@/Composables/useFormatters';
 import SearchInput from '@/Components/SearchInput.vue';
@@ -42,10 +41,6 @@ function levelClasses(level) {
 }
 
 const { formatDate } = useFormatters();
-
-function createTutorial() {
-    router.get(route('tutorials.create', { category_id: props.category.id }));
-}
 
 function onEdit(tutorialId) {
     // For now, navigate to show (edit page not implemented yet)
