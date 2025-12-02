@@ -2,7 +2,7 @@
 import HeaderTitle from '@/Components/HeaderTitle.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Download, Funnel, Play, Pencil, Trash } from 'lucide-vue-next';
-import { Link, router } from '@inertiajs/vue3';
+import { Link, router, usePage } from '@inertiajs/vue3';
 import { useFormatters } from '@/Composables/useFormatters';
 import SearchInput from '@/Components/SearchInput.vue';
 import IconTextButton from '@/Components/IconTextButton.vue';
@@ -14,6 +14,13 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+});
+
+// Admin check (same logic as sidebar): only office_owner and admin
+const page = usePage();
+const isAdmin = computed(() => {
+    const user = page.props.auth?.user;
+    return user && (user.role === 'office_owner' || user.role === 'admin');
 });
 
 function levelLabel(level) {
@@ -193,10 +200,20 @@ function onToggleLevel(val) {
                             <div class="flex gap-2 items-center justify-between">
                                 <span :class="`px-2 py-0.5 rounded text-xs ${levelClasses(tutorial.level)}`">{{ levelLabel(tutorial.level) }}</span>
                                 <div class="flex items-center gap-3">
-                                    <button type="button" class="text-text-secondary hover:text-text-primary" @click.prevent.stop="onEdit(tutorial.id)">
+                                    <button
+                                        v-if="isAdmin"
+                                        type="button"
+                                        class="text-text-secondary hover:text-text-primary"
+                                        @click.prevent.stop="onEdit(tutorial.id)"
+                                    >
                                         <Pencil class="w-5 h-5" />
                                     </button>
-                                    <button type="button" class="text-red-600 hover:text-red-700" @click.prevent.stop="requestDelete(tutorial.id)">
+                                    <button
+                                        v-if="isAdmin"
+                                        type="button"
+                                        class="text-red-600 hover:text-red-700"
+                                        @click.prevent.stop="requestDelete(tutorial.id)"
+                                    >
                                         <Trash class="w-5 h-5" />
                                     </button>
                                     <Download class="w-5 h-5 text-text-secondary" />
