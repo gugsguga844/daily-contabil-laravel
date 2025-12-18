@@ -116,9 +116,42 @@ Route::prefix('admin')
         })->name('dashboard');
 
         // Offices onboarding
+        Route::get('/offices', [\App\Http\Controllers\Admin\OfficeController::class, 'index'])
+            ->name('offices.index');
         Route::get('/offices/create', [\App\Http\Controllers\Admin\OfficeController::class, 'create'])
             ->name('offices.create');
         Route::post('/offices', [\App\Http\Controllers\Admin\OfficeController::class, 'store'])
             ->name('offices.store');
+
+        Route::get('/offices/{office}', [\App\Http\Controllers\Admin\OfficeController::class, 'show'])
+            ->whereNumber('office')
+            ->name('offices.show');
+
+        Route::get('/offices/{office}/edit', [\App\Http\Controllers\Admin\OfficeController::class, 'edit'])
+            ->whereNumber('office')
+            ->name('offices.edit');
+
+        Route::put('/offices/{office}', [\App\Http\Controllers\Admin\OfficeController::class, 'update'])
+            ->whereNumber('office')
+            ->name('offices.update');
+
+        Route::delete('/offices/{office}', [\App\Http\Controllers\Admin\OfficeController::class, 'destroy'])
+            ->whereNumber('office')
+            ->name('offices.destroy');
+
+        Route::get('/offices/{office}/users/{user}/edit', [\App\Http\Controllers\Admin\OfficeUserController::class, 'edit'])
+            ->whereNumber('office')
+            ->whereNumber('user')
+            ->name('offices.users.edit');
+
+        Route::put('/offices/{office}/users/{user}', [\App\Http\Controllers\Admin\OfficeUserController::class, 'update'])
+            ->whereNumber('office')
+            ->whereNumber('user')
+            ->name('offices.users.update');
+
+        Route::delete('/offices/{office}/users/{user}', [\App\Http\Controllers\Admin\OfficeUserController::class, 'destroy'])
+            ->whereNumber('office')
+            ->whereNumber('user')
+            ->name('offices.users.destroy');
     });
 require __DIR__.'/auth.php';
