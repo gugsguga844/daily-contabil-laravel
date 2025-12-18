@@ -7,6 +7,11 @@ return new class extends Migration
 {
     public function up(): void
     {
+        $driver = DB::getDriverName();
+        if (! in_array($driver, ['mysql', 'mariadb'], true)) {
+            return;
+        }
+
         // Doctrine DBAL is not installed in this project, so we use raw SQL.
         // These changes make optional Company fields nullable.
         DB::statement('ALTER TABLE `companies` MODIFY `fantasy_name` VARCHAR(255) NULL');
@@ -21,6 +26,11 @@ return new class extends Migration
 
     public function down(): void
     {
+        $driver = DB::getDriverName();
+        if (! in_array($driver, ['mysql', 'mariadb'], true)) {
+            return;
+        }
+
         // Revert to NOT NULL as originally created in the initial migration.
         DB::statement('ALTER TABLE `companies` MODIFY `fantasy_name` VARCHAR(255) NOT NULL');
         DB::statement('ALTER TABLE `companies` MODIFY `phone` VARCHAR(255) NOT NULL');
