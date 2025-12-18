@@ -9,6 +9,11 @@ const isAdmin = computed(() => {
     const user = page.props.auth.user;
     return user && (user.role === 'office_owner' || user.role === 'admin');
 })
+
+const isSystemAdmin = computed(() => {
+    const user = page.props.auth.user;
+    return user && (user.role === 'super_admin' || user.role === 'implantation');
+})
 </script>
 
 <template>
@@ -33,7 +38,7 @@ const isAdmin = computed(() => {
                 <template #label>Empresas</template>
             </SidebarLink>
         </div>
-        <div v-if="isAdmin" class="p-4">
+        <div v-if="isAdmin && !isSystemAdmin" class="p-4">
             <h3 class="px-3 mb-2 text-xs font-semibold uppercase text-gray-500 tracking-wider">
                 Administração
             </h3>
@@ -61,6 +66,26 @@ const isAdmin = computed(() => {
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user mr-3 h-5 w-5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                      </template>
                      <template #label>Gerenciar Usuários</template>
+                </SidebarLink>
+            </div>
+        </div>
+        <div v-if="isSystemAdmin" class="p-4">
+            <h3 class="px-3 mb-2 text-xs font-semibold uppercase text-gray-500 tracking-wider">
+                Sistema
+            </h3>
+            <div>
+                <SidebarLink :href="route('admin.dashboard')" :active="$page.url.startsWith('/admin/dashboard')">
+                    <template #icon>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield mr-3 h-5 w-5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+                    </template>
+                    <template #label>Painel do Sistema</template>
+                </SidebarLink>
+
+                <SidebarLink :href="route('admin.offices.index')" :active="$page.url.startsWith('/admin/offices')">
+                    <template #icon>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-building mr-3 h-5 w-5"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/></svg>
+                    </template>
+                    <template #label>Escritórios</template>
                 </SidebarLink>
             </div>
         </div>
