@@ -13,8 +13,17 @@ class SuperAdminSeeder extends Seeder
      */
     public function run(): void
     {
-        $email = env('SUPER_ADMIN_EMAIL', 'superadmin@example.com');
-        $password = env('SUPER_ADMIN_PASSWORD', 'password');
+        $enabled = (string) env('SUPER_ADMIN_SEED', '0');
+        if (! in_array(strtolower($enabled), ['1', 'true', 'yes', 'on'], true)) {
+            return;
+        }
+
+        $email = trim((string) env('SUPER_ADMIN_EMAIL', ''));
+        $password = (string) env('SUPER_ADMIN_PASSWORD', '');
+
+        if ($email === '' || $password === '') {
+            return;
+        }
 
         User::updateOrCreate(
             ['email' => $email],

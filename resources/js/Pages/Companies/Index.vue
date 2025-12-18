@@ -1,9 +1,9 @@
 <script setup>
 import HeaderTitle from '@/Components/HeaderTitle.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, router } from '@inertiajs/vue3';
+import { Head, router, useForm, usePage } from '@inertiajs/vue3';
 import SimpleIconCard from '@/Components/SimpleIconCard.vue';
-import { Building2, UserRoundCheck, UserRoundX, Funnel, Ellipsis, Plus, Upload } from 'lucide-vue-next';
+import { Building2, UserRoundCheck, UserRoundX, Funnel, Ellipsis, Plus, Upload, Download } from 'lucide-vue-next';
 import SearchInput from '@/Components/SearchInput.vue';
 import IconTextButton from '@/Components/IconTextButton.vue';
 import Table from '@/Components/Table.vue';
@@ -98,6 +98,62 @@ const filteredCompanies = computed(() => {
         return matchesSearch && matchesRegime && matchesStatus;
     });
 });
+
+const page = usePage();
+const importSummary = computed(() => page.props.flash?.importSummary);
+const flashSuccess = computed(() => page.props.flash?.success);
+const flashError = computed(() => page.props.flash?.error);
+
+const fileInputRef = ref(null);
+const importForm = useForm({
+    file: null,
+});
+
+const showCnpjExcelWarning = ref(false);
+
+try {
+    showCnpjExcelWarning.value = localStorage.getItem('companies.csv.showCnpjWarning') === '1';
+} catch {
+    // ignore
+}
+
+function onDownloadTemplate() {
+    showCnpjExcelWarning.value = true;
+    try {
+        localStorage.setItem('companies.csv.showCnpjWarning', '1');
+    } catch {
+        // ignore
+    }
+    window.location.href = route('companies.import.template');
+}
+
+function dismissCnpjWarning() {
+    showCnpjExcelWarning.value = false;
+    try {
+        localStorage.removeItem('companies.csv.showCnpjWarning');
+    } catch {
+        // ignore
+    }
+}
+
+function triggerImport() {
+    fileInputRef.value?.click();
+}
+
+function onFileSelected(e) {
+    const file = e?.target?.files?.[0];
+    if (!file) return;
+
+    importForm.file = file;
+    importForm.post(route('companies.import'), {
+        forceFormData: true,
+        preserveScroll: true,
+        onFinish: () => {
+            importForm.reset('file');
+            if (fileInputRef.value) fileInputRef.value.value = '';
+        },
+    });
+}
 </script>
 
 <template>
@@ -107,12 +163,73 @@ const filteredCompanies = computed(() => {
         <div class="flex gap-4 mb-8 justify-between">
             <HeaderTitle title="Empresas" subtitle="Gerencie suas empresas clientes" />
             <div class="flex gap-4 py-2">
-                <SecondaryButton :icon="Upload">
+                <SecondaryButton :icon="Download" @click="onDownloadTemplate">
+                    <span class="mt-1">Baixar modelo CSV</span>
+                </SecondaryButton>
+                <SecondaryButton :icon="Upload" @click="triggerImport" :disabled="importForm.processing">
                     <span class="mt-1">Importar lista CSV</span>
                 </SecondaryButton>
                 <PrimaryButton :icon="Plus" @click="onCreate">
                     <span class="mt-1">Nova Empresa</span>
                 </PrimaryButton>
+            </div>
+        </div>
+
+        <input
+            ref="fileInputRef"
+            type="file"
+            accept=".csv,text/csv"
+            class="hidden"
+            @change="onFileSelected"
+        />
+
+        <div v-if="showCnpjExcelWarning" class="mt-2 mb-4 bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800 relative">
+            <button type="button" class="absolute top-2 right-2 text-amber-700 hover:text-amber-900" @click="dismissCnpjWarning" aria-label="Fechar">
+                X
+            </button>
+            <div class="font-semibold">Atenção ao CNPJ no Excel</div>
+            <div class="mt-1">
+                O Excel pode transformar CNPJs em notação científica (ex.: <span class="font-mono">8,16359E+13</span>) e isso perde dígitos.
+                Para evitar:
+            </div>
+            <div class="mt-2">
+                <div>1) Formate a coluna <strong>CNPJ</strong> como <strong>Texto</strong> antes de preencher</div>
+                <div>2) Ou digite o CNPJ com apóstrofo no início: <span class="font-mono">'81635898000176</span></div>
+            </div>
+        </div>
+
+        <div v-if="importForm.processing" class="mt-2 mb-4 bg-white border rounded-lg p-4">
+            <div class="text-sm font-semibold">Importação CSV</div>
+            <div class="text-sm text-text-secondary mt-1">
+                Importando arquivo... Aguarde.
+                <span v-if="importForm.progress"> ({{ importForm.progress.percentage }}%)</span>
+            </div>
+        </div>
+
+        <div v-if="flashSuccess" class="mt-2 mb-4 bg-green-50 border border-green-200 rounded-lg p-4 text-sm text-green-700">
+            {{ flashSuccess }}
+        </div>
+
+        <div v-if="flashError" class="mt-2 mb-4 bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">
+            {{ flashError }}
+        </div>
+
+        <div v-if="importSummary" class="mt-2 mb-4 bg-white border rounded-lg p-4">
+            <div class="text-sm font-semibold">Importação CSV</div>
+            <div class="text-sm text-text-secondary mt-1">
+                Criadas: {{ importSummary.created }}
+                | Atualizadas: {{ importSummary.updated }}
+                | Ignoradas: {{ importSummary.skipped }}
+                | Erros: {{ importSummary.errors_count }}
+            </div>
+
+            <div v-if="importSummary.errors_count > 0" class="mt-3">
+                <div class="text-sm font-semibold">Erros (primeiros {{ importSummary.errors?.length || 0 }})</div>
+                <div class="mt-2 space-y-1 text-sm text-red-600">
+                    <div v-for="(err, idx) in importSummary.errors" :key="idx">
+                        Linha {{ err.line }} ({{ err.field }}): {{ err.message }}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="flex gap-4">

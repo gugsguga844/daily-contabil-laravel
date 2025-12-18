@@ -15,9 +15,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Always ensure a System User (super-admin) exists for Admin UI access
-        $this->call(SuperAdminSeeder::class);
-
         // 1) Criar alguns offices (sem owner por padrão)
         $offices = Office::factory()->count(3)->create();
 

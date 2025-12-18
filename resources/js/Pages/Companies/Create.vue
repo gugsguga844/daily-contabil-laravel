@@ -123,7 +123,7 @@ function validateField(field) {
             localErrors.value.name = form.name.trim() ? '' : 'Informe a razão social.';
             break;
         case 'fantasy_name':
-            localErrors.value.fantasy_name = form.fantasy_name.trim() ? '' : 'Informe o nome fantasia.';
+            localErrors.value.fantasy_name = '';
             break;
         case 'cnpj': {
             const digits = form.cnpj.replace(/\D/g, '');
@@ -136,44 +136,44 @@ function validateField(field) {
             break;
         case 'phone': {
             const digits = form.phone.replace(/\D/g, '');
-            if (!digits) localErrors.value.phone = 'Informe o telefone.';
+            if (!digits) localErrors.value.phone = '';
             else if (digits.length !== 11) localErrors.value.phone = 'Telefone deve conter 11 dígitos (DDD + número).';
             else localErrors.value.phone = '';
             break; }
         case 'email':
-            if (!form.email) localErrors.value.email = 'Informe o e-mail.';
+            if (!form.email) localErrors.value.email = '';
             else if (!emailRegex.test(form.email)) localErrors.value.email = 'Informe um e-mail válido.';
             else localErrors.value.email = '';
             break;
         case 'zip_code': {
             const digits = form.zip_code.replace(/\D/g, '');
-            if (!digits) localErrors.value.zip_code = 'Informe o CEP.';
+            if (!digits) localErrors.value.zip_code = '';
             else if (digits.length !== 8) localErrors.value.zip_code = 'CEP deve conter 8 dígitos.';
             else localErrors.value.zip_code = '';
             break; }
         case 'street':
-            localErrors.value.street = form.street.trim() ? '' : 'Informe o logradouro.';
+            localErrors.value.street = '';
             break;
         case 'number':
-            localErrors.value.number = form.number.trim() ? '' : 'Informe o número.';
+            localErrors.value.number = '';
             break;
         case 'city':
-            localErrors.value.city = form.city.trim() ? '' : 'Informe a cidade.';
+            localErrors.value.city = '';
             break;
         case 'state':
-            localErrors.value.state = form.state.trim() ? '' : 'Informe o estado.';
+            localErrors.value.state = '';
             break;
         case 'accountant_id':
-            localErrors.value.accountant_id = form.accountant_id ? '' : 'Selecione o contador responsável.';
+            localErrors.value.accountant_id = '';
             break;
     }
 }
 
 function validateForm() {
-    ['name','fantasy_name','cnpj','tax_regime','phone','email','zip_code','street','number','city','state','accountant_id']
+    ['name','cnpj','tax_regime','phone','email','zip_code']
         .forEach(validateField);
     const errs = localErrors.value;
-    return !errs.name && !errs.fantasy_name && !errs.cnpj && !errs.tax_regime && !errs.phone && !errs.email && !errs.zip_code && !errs.street && !errs.number && !errs.city && !errs.state && !errs.accountant_id;
+    return !errs.name && !errs.cnpj && !errs.tax_regime && !errs.phone && !errs.email && !errs.zip_code;
 }
 </script>
 
