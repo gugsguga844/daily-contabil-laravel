@@ -54,6 +54,14 @@ Route::post('/companies', [CompanyController::class, 'store'])
     ->middleware(['auth', 'verified'])
     ->name('companies.store');
 
+Route::post('/companies/import', [CompanyController::class, 'importCsv'])
+    ->middleware(['auth', 'verified'])
+    ->name('companies.import');
+
+Route::get('/companies/import/template', [CompanyController::class, 'importCsvTemplate'])
+    ->middleware(['auth', 'verified'])
+    ->name('companies.import.template');
+
 Route::get('/companies/{company_id}', [CompanyController::class, 'show'])
     ->whereNumber('company_id')
     ->middleware(['auth', 'verified'])
